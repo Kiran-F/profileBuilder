@@ -1,0 +1,265 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Digital Profile Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#fffbff",
+                        "on-tertiary-fixed": "#301400",
+                        "primary": "#4648d4",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed": "#e2dfff",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-primary": "#c0c1ff",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-error": "#ffffff",
+                        "background": "#f7f9fb",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "surface-container-high": "#e6e8ea",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "inverse-surface": "#2d3133",
+                        "error-container": "#ffdad6",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c7c4d7",
+                        "surface-container-low": "#f2f4f6",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#0f0069",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary-container": "#6063ee",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-tint": "#494bd6",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#645efb",
+                        "secondary": "#4b41e1",
+                        "tertiary-container": "#b55d00",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#07006c",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface-variant": "#464554",
+                        "tertiary": "#904900",
+                        "on-primary-container": "#fffbff",
+                        "outline": "#767586",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#fffbff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-bright": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "canvas-padding": "64px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "mono-label": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "mono-label": ["12px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .neo-skeuomorphic-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+        }
+        .canvas-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .element-hover:hover {
+            outline: 1px solid #4648d4;
+            outline-offset: -1px;
+        }
+        .element-hover .controls {
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .element-hover:hover .controls {
+            opacity: 1;
+        }
+        .grabber {
+            cursor: grab;
+        }
+        .grabber:active {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface dark:bg-on-background text-primary dark:text-primary-fixed font-label-sm text-label-sm w-sidebar-width h-[calc(100vh-4rem)] border-r border-outline-variant dark:border-outline flex flex-col py-6 px-4 gap-4 overflow-y-auto z-40 relative h-screen">
+<div class="mb-6 px-2">
+<h2 class="text-title-md font-title-md text-on-surface dark:text-on-surface-variant mb-1">Elements</h2>
+<p class="text-on-surface-variant text-xs">Drag to canvas</p>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-all cursor-grab active:cursor-grabbing border border-transparent hover:border-outline-variant bg-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined" data-weight="fill">person</span>
+<span class="">Identity</span>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-primary-fixed text-on-primary-fixed-variant font-bold border border-primary-fixed cursor-grab active:cursor-grabbing shadow-sm scale-95 duration-100">
+<span class="material-symbols-outlined">description</span>
+<span class="">Bio</span>
+</div>
+
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-variant transition-all cursor-grab active:cursor-grabbing border border-transparent hover:border-outline-variant bg-surface-container-lowest shadow-sm">
+<span class="material-symbols-outlined">share</span>
+<span class="">Social</span>
+</div>
+</div>
+<div class="mt-auto pt-6">
+<button class="w-full py-3 rounded-lg border border-dashed border-outline-variant text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Custom Block
+                </button>
+</div>
+</aside>
+<!-- Main Content Area (Canvas) -->
+<main class="flex-1 bg-surface-container-low overflow-y-auto flex items-start justify-center p-canvas-padding relative">
+<div class="w-full max-w-[400px] min-h-[600px] bg-surface-container-lowest rounded-[24px] border border-outline-variant canvas-shadow relative p-6 flex flex-col gap-4">
+<!-- Placeholder / Instruction -->
+<div class="absolute inset-0 border-2 border-dashed border-outline-variant rounded-[24px] pointer-events-none opacity-20 z-0"></div>
+<div class="absolute top-4 right-4 z-10 text-outline-variant text-xs font-mono-label bg-surface-container px-2 py-1 rounded">Mobile Preview</div>
+<!-- Element 1: Avatar -->
+<div class="relative element-hover p-4 rounded-lg bg-surface-container-lowest z-10 group mt-8">
+<!-- Controls -->
+<div class="controls absolute left-[-12px] top-1/2 -translate-y-1/2 bg-surface-container-lowest border border-outline-variant rounded shadow-sm p-1 grabber flex flex-col gap-1">
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+</div>
+<div class="controls absolute right-2 top-2 flex gap-1 bg-surface/80 backdrop-blur rounded p-1 shadow-sm">
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-error hover:text-on-error transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+</button>
+</div>
+<div class="flex justify-center">
+<img alt="Alex Rivera" class="w-24 h-24 rounded-full object-cover shadow-sm border-2 border-surface-container-lowest" data-alt="A stylish, high-quality profile picture of a young professional, featuring soft natural lighting, set against a subtle, blurred modern office background. The composition is clean and focused, reflecting a premium digital workspace aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY01OpAtb5zW-339_2XCMxyVDl1qeiKAZIsN1M-GC-9OYsS5m_Hj_zyEhYAK8zMmJHFxugLpWU4j47G7HbkUskevVdsxOnq6Wj8MLVdyWqawQWpNTG7Qw4vbY7ObdwIw8nCUS9XF_mqUI_Y_FTfTEtJrgWEAM5538wi8kFk6hVjyBA8XC0qqIkEfRmYVodgzlB77UzzfFD1XjOOh190J0big5gvsdZDGkP_861FRksixTrdHZc5YxS9g">
+</div>
+</div>
+<!-- Element 2: Name -->
+<div class="relative element-hover p-2 rounded-lg bg-surface-container-lowest z-10 text-center">
+<div class="controls absolute left-[-12px] top-1/2 -translate-y-1/2 bg-surface-container-lowest border border-outline-variant rounded shadow-sm p-1 grabber flex flex-col gap-1">
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+</div>
+<div class="controls absolute right-2 top-2 flex gap-1 bg-surface/80 backdrop-blur rounded p-1 shadow-sm">
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-error hover:text-on-error transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+</button>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface m-0">Alex Rivera</h1>
+</div>
+<!-- Element 3: Bio -->
+<div class="relative element-hover p-4 rounded-lg bg-surface-container-lowest z-10 text-center outline outline-1 outline-primary outline-offset-[-1px] bg-primary/5">
+<div class="controls absolute left-[-12px] top-1/2 -translate-y-1/2 bg-surface-container-lowest border border-outline-variant rounded shadow-sm p-1 grabber flex flex-col gap-1 opacity-100">
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+</div>
+<div class="controls absolute right-2 top-2 flex gap-1 bg-surface/80 backdrop-blur rounded p-1 shadow-sm opacity-100">
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-error hover:text-on-error transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+</button>
+</div>
+<p class="text-on-surface-variant font-body-md text-body-md m-0">Digital Designer &amp; Photographer based in Brooklyn.</p>
+</div>
+<!-- Element 4: Social -->
+<div class="relative element-hover p-4 rounded-lg bg-surface-container-lowest z-10 flex justify-center gap-4">
+<div class="controls absolute left-[-12px] top-1/2 -translate-y-1/2 bg-surface-container-lowest border border-outline-variant rounded shadow-sm p-1 grabber flex flex-col gap-1">
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+<div class="w-1 h-1 bg-outline rounded-full"></div>
+</div>
+<div class="controls absolute right-2 top-2 flex gap-1 bg-surface/80 backdrop-blur rounded p-1 shadow-sm">
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-primary hover:text-on-primary transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</button>
+<button class="w-6 h-6 flex items-center justify-center rounded-full bg-surface-container-lowest border border-outline-variant hover:bg-error hover:text-on-error transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+</button>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shadow-sm border border-outline-variant/50 hover:bg-surface-container-highest cursor-pointer">
+<span class="material-symbols-outlined">photo_camera</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shadow-sm border border-outline-variant/50 hover:bg-surface-container-highest cursor-pointer">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant shadow-sm border border-outline-variant/50 hover:bg-surface-container-highest cursor-pointer">
+<span class="material-symbols-outlined">work</span>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="absolute inset-0 bg-surface-container-low/50 backdrop-blur-sm z-50 flex items-center justify-center pointer-events-none">
+<!-- Modal Box -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] w-full max-w-md pointer-events-auto border border-outline-variant overflow-hidden transform translate-y-12">
+<div class="flex justify-between items-center p-6 border-b border-outline-variant/50">
+<h3 class="font-title-md text-title-md text-on-surface">Edit Bio</h3>
+<button class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="p-6">
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Content</label>
+<textarea class="w-full bg-surface rounded-lg border border-outline-variant p-3 font-body-md text-body-md text-on-surface shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none resize-none h-32 transition-all" placeholder="Write something about yourself...">Digital Designer &amp; Photographer based in Brooklyn.</textarea>
+</div>
+<div class="p-6 bg-surface-container-low flex justify-end gap-3 border-t border-outline-variant/50">
+<button class="px-4 py-2 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-sm shadow-sm hover:bg-surface-container transition-colors">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-label-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] hover:bg-surface-tint transition-colors">Save Changes</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+
+</body></html>

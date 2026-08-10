@@ -1,0 +1,360 @@
+import React, { useState, useEffect } from 'react';
+import Sidebar from './components/Sidebar';
+import Canvas from './components/Canvas';
+import EditIdentityModal from './components/Modals/EditIdentityModal';
+import EditBioModal from './components/Modals/EditBioModal';
+import EditSocialModal from './components/Modals/EditSocialModal';
+import EditCustomModal from './components/Modals/EditCustomModal';
+import FullProfileWebPage from './components/FullProfileWebPage';
+import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
+
+const BG_PRESET_COLORS = [
+  { hex: '#ffffff', name: 'Pure White' },
+  { hex: '#f8fafc', name: 'Slate Light' },
+  { hex: '#fefce8', name: 'Soft Cream' },
+  { hex: '#eef2ff', name: 'Soft Indigo' },
+  { hex: '#ecfdf5', name: 'Soft Emerald' },
+  { hex: '#fff1f2', name: 'Soft Rose' },
+  { hex: '#f3e8ff', name: 'Soft Lavender' },
+  { hex: '#0f172a', name: 'Dark Slate' }
+];
+
+const TEXT_PRESET_COLORS = [
+  { hex: '#191c1e', name: 'Deep Charcoal' },
+  { hex: '#0f172a', name: 'Midnight Slate' },
+  { hex: '#334155', name: 'Slate Gray' },
+  { hex: '#ffffff', name: 'Pure White' },
+  { hex: '#4338ca', name: 'Deep Indigo' },
+  { hex: '#047857', name: 'Deep Emerald' },
+  { hex: '#be123c', name: 'Deep Rose' },
+  { hex: '#6b21a8', name: 'Deep Purple' }
+];
+
+export default function App() {
+  const isPreviewMode = new URLSearchParams(window.location.search).get('preview') === 'true';
+  //checks browser's address bar for is preview mode on? if yes, show full profile page
+  const [elements, setElements] = useState(() => {
+    const saved = localStorage.getItem('profile_studio_drag_elements_v4');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [cardBgColor, setCardBgColor] = useState(() => {
+    return localStorage.getItem('profile_studio_card_bg') || '#ffffff';
+  });
+
+  const [textColor, setTextColor] = useState(() => {
+    return localStorage.getItem('profile_studio_text_color') || '#191c1e';
+  });
+
+  const [editingElement, setEditingElement] = useState(null);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+  const [activeColorTab, setActiveColorTab] = useState('background'); // 'background' | 'text'
+
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+    if (!isPreviewMode) {
+      localStorage.setItem('profile_studio_drag_elements_v4', JSON.stringify(elements));
+      localStorage.setItem('profile_studio_card_bg', cardBgColor);
+      localStorage.setItem('profile_studio_text_color', textColor);
+    }
+  }, [elements, cardBgColor, textColor, isPreviewMode]);
+
+  if (isPreviewMode) {
+    return <FullProfileWebPage initialElements={elements} initialCardBgColor={cardBgColor} initialTextColor={textColor} />;
+  }
+
+  const handleAddElementAtIndex = (type, index) => {
+    const emptyData = EMPTY_ELEMENT_DATA[type] || {};
+
+    const newElement = {
+      id: `elem-${type}-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      type,
+      data: JSON.parse(JSON.stringify(emptyData))
+    };
+
+    setElements((prev) => {
+      const updated = [...prev];
+      const targetIdx = index >= 0 && index <= prev.length ? index : prev.length;
+      updated.splice(targetIdx, 0, newElement);
+      return updated;
+    });
+
+    setEditingElement(newElement);
+  };
+
+  const handleSaveElementData = (id, newData) => {
+    setElements((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, data: newData } : item))
+    );
+    setEditingElement(null);
+  };
+
+  const handleDeleteElement = (id) => {
+    setElements((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleReorderElements = (newElements) => {
+    setElements(newElements);
+  };
+
+  const handleClearCanvas = () => {
+    setElements([]);
+    localStorage.removeItem('profile_studio_drag_elements_v4');
+  };
+
+  const handleOpenPreviewTab = () => {
+    localStorage.setItem('profile_studio_preview_data', JSON.stringify({ elements, cardBgColor, textColor }));
+    const previewUrl = `${window.location.origin}${window.location.pathname}?preview=true`;
+    window.open(previewUrl, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white">
+      {/* Top Action Bar */}
+      <header className="h-14 ml-60 bg-white/90 backdrop-blur-xs border-b border-slate-200 px-6 flex items-center justify-between z-20 sticky top-0">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
+            Interactive Profile Studio
+          </span>
+        </div>
+
+        {/* Action Controls & Color Picker */}
+        <div className="flex items-center gap-3">
+          {/* "Change Colors" Button */}
+          <div className="relative">
+            <button
+              onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs"
+              title="Customize Background Color & Text Color"
+            >
+              <span className="material-symbols-outlined text-base text-indigo-600">palette</span>
+              <span>Change Colors</span>
+              <div className="flex items-center gap-1 ml-1 border-l border-slate-200 pl-1.5">
+                <span
+                  className="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-2xs"
+                  style={{ backgroundColor: cardBgColor }}
+                  title="Current Background"
+                ></span>
+                <span
+                  className="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-2xs"
+                  style={{ backgroundColor: textColor }}
+                  title="Current Text Color"
+                ></span>
+              </div>
+            </button>
+
+            {/* Color Picker Dropdown Popover */}
+            {isColorPickerOpen && (
+              <div className="absolute right-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 animate-fadeIn">
+                {/* Popover Header */}
+                <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm text-indigo-600">tune</span>
+                    Color Customizer
+                  </span>
+                  <button
+                    onClick={() => setIsColorPickerOpen(false)}
+                    className="text-slate-400 hover:text-slate-600 p-0.5 rounded-md cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-base">close</span>
+                  </button>
+                </div>
+
+                {/* Tab Switches: Change Background Color vs Change Text Color */}
+                <div className="flex bg-slate-100 p-1 rounded-xl mb-4 gap-1">
+                  <button
+                    onClick={() => setActiveColorTab('background')}
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'background'
+                        ? 'bg-white text-indigo-600 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full border border-slate-300"
+                      style={{ backgroundColor: cardBgColor }}
+                    ></span>
+                    Background
+                  </button>
+                  <button
+                    onClick={() => setActiveColorTab('text')}
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'text'
+                        ? 'bg-white text-indigo-600 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full border border-slate-300"
+                      style={{ backgroundColor: textColor }}
+                    ></span>
+                    Text Color
+                  </button>
+                </div>
+
+                {/* Option 1: CHANGE BACKGROUND COLOR */}
+                {activeColorTab === 'background' && (
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-700 block mb-2">
+                      Choose Background Color:
+                    </span>
+                    <div className="flex items-center gap-3 mb-3 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                      <input
+                        type="color"
+                        value={cardBgColor}
+                        onChange={(e) => setCardBgColor(e.target.value)}
+                        className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent p-0"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-medium text-slate-500">Hex Code</span>
+                        <span className="text-xs font-mono font-bold text-slate-800 uppercase">{cardBgColor}</span>
+                      </div>
+                    </div>
+
+                    <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">Presets</span>
+                    <div className="grid grid-cols-4 gap-2">
+                      {BG_PRESET_COLORS.map((preset) => (
+                        <button
+                          key={preset.hex}
+                          onClick={() => setCardBgColor(preset.hex)}
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${cardBgColor.toLowerCase() === preset.hex.toLowerCase()
+                              ? 'border-indigo-600 ring-2 ring-indigo-500/30'
+                              : 'border-slate-200'
+                            }`}
+                          style={{ backgroundColor: preset.hex }}
+                          title={preset.name}
+                        >
+                          {cardBgColor.toLowerCase() === preset.hex.toLowerCase() && (
+                            <span
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
+                                }`}
+                            >
+                              check
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Option 2: CHANGE TEXT COLOR */}
+                {activeColorTab === 'text' && (
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-700 block mb-2">
+                      Choose Text Color:
+                    </span>
+                    <div className="flex items-center gap-3 mb-3 p-2 bg-slate-50 rounded-xl border border-slate-200">
+                      <input
+                        type="color"
+                        value={textColor}
+                        onChange={(e) => setTextColor(e.target.value)}
+                        className="w-8 h-8 rounded-lg cursor-pointer border-0 bg-transparent p-0"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-[11px] font-medium text-slate-500">Hex Code</span>
+                        <span className="text-xs font-mono font-bold text-slate-800 uppercase">{textColor}</span>
+                      </div>
+                    </div>
+
+                    <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">Presets</span>
+                    <div className="grid grid-cols-4 gap-2">
+                      {TEXT_PRESET_COLORS.map((preset) => (
+                        <button
+                          key={preset.hex}
+                          onClick={() => setTextColor(preset.hex)}
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${textColor.toLowerCase() === preset.hex.toLowerCase()
+                              ? 'border-indigo-600 ring-2 ring-indigo-500/30'
+                              : 'border-slate-200'
+                            }`}
+                          style={{ backgroundColor: preset.hex }}
+                          title={preset.name}
+                        >
+                          {textColor.toLowerCase() === preset.hex.toLowerCase() && (
+                            <span
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
+                                }`}
+                            >
+                              check
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {elements.length > 0 && (
+            <button
+              onClick={handleClearCanvas}
+              className="text-xs font-medium text-slate-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              Clear Canvas
+            </button>
+          )}
+
+          <button
+            onClick={handleOpenPreviewTab}
+            className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
+            Preview Profile
+          </button>
+        </div>
+      </header>
+
+      {/* Workspace Area */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar Navigation */}
+        <Sidebar />
+
+        {/* Center Canvas */}
+        <Canvas
+          elements={elements}
+          cardBgColor={cardBgColor}
+          textColor={textColor}
+          onReorderElements={handleReorderElements}
+          onAddElementAtIndex={handleAddElementAtIndex}
+          onEditElement={(elem) => setEditingElement(elem)}
+          onDeleteElement={handleDeleteElement}
+        />
+      </div>
+
+      {/* Modals */}
+      {editingElement && editingElement.type === 'identity' && (
+        <EditIdentityModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'bio' && (
+        <EditBioModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'social' && (
+        <EditSocialModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'custom' && (
+        <EditCustomModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+    </div>
+  );
+}

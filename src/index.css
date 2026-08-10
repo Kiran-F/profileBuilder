@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #4648d4;
+    --bg-surface: #f7f9fb;
+    --bg-surface-lowest: #ffffff;
+    --bg-surface-low: #f2f4f6;
+    --bg-surface-high: #e6e8ea;
+    --text-main: #191c1e;
+    --text-muted: #464554;
+    --border-color: #c7c4d7;
+  }
+}
+
+/* Custom Utilities for Profile Builder Studio */
+.neo-skeuomorphic-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.canvas-shadow {
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.06);
+}
+
+/* Element Wrapper & Controls: Outline and controls visible ONLY on hover */
+.element-wrapper {
+  position: relative;
+  border: 1px solid transparent;
+  transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.element-wrapper:hover {
+  border-color: #818cf8; /* indigo-400 outline on hover */
+  background-color: rgba(238, 242, 255, 0.2);
+}
+
+.element-controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.element-wrapper:hover .element-controls,
+.element-controls:hover,
+.element-controls:focus-within {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+}
+
+.grabber {
+  cursor: grab;
+}
+
+.grabber:active {
+  cursor: grabbing;
+}

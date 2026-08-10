@@ -1,0 +1,199 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Profile Studio - Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c7c4d7",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "primary-fixed": "#e1e0ff",
+                        "primary-container": "#6063ee",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#0f0069",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-container": "#b55d00",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "secondary-fixed": "#e2dfff",
+                        "surface-dim": "#d8dadc",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary": "#904900",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#645efb",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#767586",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "secondary": "#4b41e1",
+                        "on-surface": "#191c1e",
+                        "primary": "#4648d4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#301400",
+                        "on-background": "#191c1e",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface": "#f7f9fb",
+                        "on-secondary-container": "#fffbff",
+                        "surface-tint": "#494bd6",
+                        "inverse-primary": "#c0c1ff",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#464554",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "gutter": "16px",
+                        "canvas-padding": "64px",
+                        "margin-desktop": "32px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "mono-label": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "title-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "mono-label": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "title-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .drag-tilt {
+            transform: rotate(-3deg) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .canvas-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low text-on-surface min-h-screen flex flex-col font-body-md overflow-hidden">
+<!-- TopNavBar -->
+
+<div class="flex flex-1 overflow-hidden relative">
+<!-- SideNavBar -->
+<aside class="bg-surface w-sidebar-width h-[calc(100vh-4rem)] border-r border-outline-variant flex flex-col py-6 px-4 gap-4 z-40 relative h-full">
+<div class="mb-4 flex items-center gap-3">
+<div class="h-10 w-10 bg-primary-container text-on-primary-container rounded-lg flex items-center justify-center font-bold font-title-md text-title-md">
+                    E
+                </div>
+<div>
+<h2 class="text-title-md font-title-md text-on-surface leading-tight">Elements</h2>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Drag to canvas</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 font-label-sm text-label-sm flex-1">
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined text-outline" data-icon="person">person</span>
+<span class="">Identity</span>
+</div>
+<!-- The "Bio" element being dragged is visually removed/faded from here to simulate the action -->
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant bg-surface-container-lowest border border-dashed border-outline opacity-50">
+<span class="material-symbols-outlined text-outline" data-icon="description">description</span>
+<span class="">Bio</span>
+</div>
+
+<div class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all cursor-pointer border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined text-outline" data-icon="share">share</span>
+<span class="">Social</span>
+</div>
+</nav>
+<button class="mt-auto w-full py-3 bg-surface-container-lowest border border-outline-variant text-on-surface rounded-lg font-label-sm text-label-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Add Custom Block
+            </button>
+</aside>
+<!-- Main Workspace Canvas -->
+<main class="flex-1 bg-surface-container p-canvas-padding overflow-y-auto relative flex justify-center items-start">
+<!-- The "Paper" Canvas -->
+<div class="bg-surface-container-lowest w-full max-w-3xl rounded-xl canvas-shadow border border-outline-variant/30 min-h-[800px] p-12 relative flex flex-col items-center">
+<!-- Active Element: Avatar & Name -->
+<div class="group relative w-full flex flex-col items-center p-6 rounded-lg border border-transparent hover:border-primary/20 hover:bg-primary/5 transition-colors cursor-default mb-8">
+<!-- Controls that appear on hover -->
+<div class="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab text-outline hover:text-primary">
+<span class="material-symbols-outlined" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<div class="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+<button class="h-6 w-6 bg-surface-container-lowest/80 rounded-full flex items-center justify-center border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary">
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+</button>
+<button class="h-6 w-6 bg-surface-container-lowest/80 rounded-full flex items-center justify-center border border-outline-variant text-on-surface-variant hover:text-error hover:border-error">
+<span class="material-symbols-outlined text-[14px]" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Content -->
+<div class="h-32 w-32 rounded-full overflow-hidden mb-6 border-4 border-surface-container-lowest shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A high-quality, professional portrait of a male digital designer, named Alex Rivera. The image is clean, well-lit with soft natural light, and set against a minimalist, slightly warm grey background. The style is modern, approachable, and creative, perfectly suited for a high-end personal portfolio or digital profile page." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDALQIO65qGvZuANZWZjWWk-RqwKf6RUA9-rSqQ7HXxv_h57eCxYDFM92Ie9w3vd5f-LPVt0esGSJN5WPpEfC9rLfMWpcB3XAGi7Kscc5RS36uDC3M5jPZBhMegxJ4J-8nsxbQynTFbUFmYtQPgN9CEZLolzwNPWkmiBAjkA4F3htI4OWYZJ12Bhv7hnqXkz4fjWr1WA3cLnRaMyIFlTVtKXlrDUV9cDd02GCdHItSJwzAd8JNJXH-DcA">
+</div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface mb-2">Alex Rivera</h1>
+<p class="text-title-md font-title-md text-on-surface-variant">Digital Designer &amp; Photographer</p>
+</div>
+<!-- Drop Zone Indicator -->
+<div class="w-full h-32 border-2 border-dashed border-primary/50 bg-primary/5 rounded-lg flex items-center justify-center mb-8 relative">
+<span class="text-primary font-label-sm text-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                        Drop block here
+                    </span>
+</div>
+<!-- Static Element: Social Links -->
+<div class="w-full flex justify-center gap-4 mt-8 opacity-70">
+<div class="h-12 w-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="link">link</span>
+</div>
+<div class="h-12 w-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+<!-- Dragging Element (Floating above everything) -->
+<div class="absolute left-1/3 top-1/2 w-64 bg-surface-container-lowest border border-outline-variant p-4 rounded-lg drag-tilt cursor-grabbing z-50 flex items-center gap-3">
+<span class="material-symbols-outlined text-outline cursor-grabbing" data-icon="drag_indicator">drag_indicator</span>
+<div class="flex items-center gap-2 text-on-surface font-title-md text-title-md">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+                     Bio Text Block
+                 </div>
+</div>
+</main>
+</div>
+
+
+</body></html>
