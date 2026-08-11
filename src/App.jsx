@@ -122,7 +122,7 @@ export default function App() {
       e.dataTransfer.setData('text/plain', type);
       e.dataTransfer.setData('application/x-profile-block', type);
       e.dataTransfer.effectAllowed = 'copy';
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const handleMobileDragEnd = () => {
@@ -137,7 +137,7 @@ export default function App() {
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
           <span className="text-xs font-bold uppercase tracking-wider text-slate-600 truncate max-w-[140px] sm:max-w-none">
-            Interactive Profile Studio
+            Profile Studio
           </span>
         </div>
 
@@ -185,11 +185,10 @@ export default function App() {
                 <div className="flex bg-slate-100 p-1 rounded-xl mb-4 gap-1">
                   <button
                     onClick={() => setActiveColorTab('background')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                      activeColorTab === 'background'
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'background'
                         ? 'bg-white text-indigo-600 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
-                    }`}
+                      }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-slate-300"
@@ -199,11 +198,10 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => setActiveColorTab('text')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                      activeColorTab === 'text'
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'text'
                         ? 'bg-white text-indigo-600 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
-                    }`}
+                      }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-slate-300"
@@ -237,19 +235,17 @@ export default function App() {
                         <button
                           key={preset.hex}
                           onClick={() => setCardBgColor(preset.hex)}
-                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${
-                            cardBgColor.toLowerCase() === preset.hex.toLowerCase()
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${cardBgColor.toLowerCase() === preset.hex.toLowerCase()
                               ? 'border-indigo-600 ring-2 ring-indigo-500/30'
                               : 'border-slate-200'
-                          }`}
+                            }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
                         >
                           {cardBgColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${
-                                preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
-                              }`}
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
+                                }`}
                             >
                               check
                             </span>
@@ -284,19 +280,17 @@ export default function App() {
                         <button
                           key={preset.hex}
                           onClick={() => setTextColor(preset.hex)}
-                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${
-                            textColor.toLowerCase() === preset.hex.toLowerCase()
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${textColor.toLowerCase() === preset.hex.toLowerCase()
                               ? 'border-indigo-600 ring-2 ring-indigo-500/30'
                               : 'border-slate-200'
-                          }`}
+                            }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
                         >
                           {textColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${
-                                preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
-                              }`}
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
+                                }`}
                             >
                               check
                             </span>
@@ -385,11 +379,10 @@ export default function App() {
           type="button"
           disabled={elements.length === 0}
           onClick={handleClearCanvas}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
-            elements.length > 0
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${elements.length > 0
               ? 'text-red-500 hover:text-red-700'
               : 'text-slate-300 opacity-40 pointer-events-none'
-          }`}
+            }`}
           title="Clear all canvas elements"
         >
           <span className="material-symbols-outlined text-xl">delete_sweep</span>
