@@ -4,7 +4,8 @@ import BioElement from './ProfileElements/BioElement';
 import SocialElement from './ProfileElements/SocialElement';
 import BadgesElement from './ProfileElements/BadgesElement';
 import YoutubeElement from './ProfileElements/YoutubeElement';
-import CustomLinkElement from './ProfileElements/CustomLinkElement';
+import TextElement from './ProfileElements/TextElement';
+import ContactElement from './ProfileElements/ContactElement';
 
 export default function FullProfileWebPage({ initialElements, initialCardBgColor, initialTextColor }) {
   const [elements, setElements] = useState(initialElements || []);
@@ -39,8 +40,10 @@ export default function FullProfileWebPage({ initialElements, initialCardBgColor
         return <BadgesElement data={elem.data} textColor={textColor} />;
       case 'youtube':
         return <YoutubeElement data={elem.data} textColor={textColor} />;
-      case 'custom':
-        return <CustomLinkElement data={elem.data} />;
+      case 'text':
+        return <TextElement data={elem.data} textColor={textColor} />;
+      case 'contact':
+        return <ContactElement data={elem.data} textColor={textColor} />;
       default:
         return null;
     }

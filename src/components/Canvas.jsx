@@ -4,7 +4,8 @@ import BioElement from './ProfileElements/BioElement';
 import SocialElement from './ProfileElements/SocialElement';
 import BadgesElement from './ProfileElements/BadgesElement';
 import YoutubeElement from './ProfileElements/YoutubeElement';
-import CustomLinkElement from './ProfileElements/CustomLinkElement';
+import TextElement from './ProfileElements/TextElement';
+import ContactElement from './ProfileElements/ContactElement';
 
 export default function Canvas({
   elements,
@@ -44,7 +45,7 @@ export default function Canvas({
     if (e && e.dataTransfer) {
       try {
         const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-profile-block');
-        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'custom')) {
+        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact')) {
           return text;
         }
       } catch (err) {}
@@ -111,7 +112,7 @@ export default function Canvas({
     const sidebarType = getDraggedType(e);
     const insertPosition = targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length);
 
-    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'custom')) {
+    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact')) {
       onAddElementAtIndex(sidebarType, insertPosition);
     }
 
@@ -132,8 +133,10 @@ export default function Canvas({
         return <BadgesElement data={elem.data} textColor={textColor} />;
       case 'youtube':
         return <YoutubeElement data={elem.data} textColor={textColor} />;
-      case 'custom':
-        return <CustomLinkElement data={elem.data} />;
+      case 'text':
+        return <TextElement data={elem.data} textColor={textColor} />;
+      case 'contact':
+        return <ContactElement data={elem.data} textColor={textColor} />;
       default:
         return null;
     }
@@ -191,7 +194,7 @@ export default function Canvas({
               Your profile canvas is currently empty
             </h3>
             <p className="text-xs text-slate-500 max-w-xs leading-relaxed px-1">
-              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>, <span className="font-semibold text-indigo-600">YouTube</span>) from the menu and drop them here to build your profile!
+              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>, <span className="font-semibold text-indigo-600">Contact</span>) from the menu and drop them here to build your profile!
             </p>
           </div>
         )}

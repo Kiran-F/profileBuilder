@@ -32,6 +32,19 @@ export const EMPTY_ELEMENT_DATA = {
   youtube: {
     title: '',
     videoUrl: ''
+  },
+  text: {
+    heading: '',
+    content: '',
+    alignment: 'center',
+    fontSize: 'medium'
+  },
+  contact: {
+    sectionTitle: 'Contact Information',
+    email: '',
+    phone: '',
+    website: '',
+    location: ''
   }
 };
 
@@ -65,5 +78,17 @@ export const TEMPLATE_ELEMENTS = {
     title: 'YouTube Video',
     description: 'Embed YouTube Video',
     icon: 'play_circle'
+  },
+  text: {
+    type: 'text',
+    title: 'Text Block',
+    description: 'Custom Heading & Text',
+    icon: 'text_fields'
+  },
+  contact: {
+    type: 'contact',
+    title: 'Contact Info',
+    description: 'Email, Phone, Web & Location',
+    icon: 'contacts'
   }
 };

@@ -6,6 +6,8 @@ import EditBioModal from './components/Modals/EditBioModal';
 import EditSocialModal from './components/Modals/EditSocialModal';
 import EditBadgesModal from './components/Modals/EditBadgesModal';
 import EditYoutubeModal from './components/Modals/EditYoutubeModal';
+import EditTextModal from './components/Modals/EditTextModal';
+import EditContactModal from './components/Modals/EditContactModal';
 import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
 
@@ -401,6 +403,32 @@ export default function App() {
           <span className="text-[10px] font-semibold whitespace-nowrap">YouTube</span>
         </div>
 
+        {/* 6. Text Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'text')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
+          title="Drag onto canvas to add Text Block"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">text_fields</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Text</span>
+        </div>
+
+        {/* 7. Contact Info Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'contact')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
+          title="Drag onto canvas to add Contact Info"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">contacts</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Contact</span>
+        </div>
+
         {/* 6. Clear Canvas Option */}
         <button
           type="button"
@@ -452,6 +480,22 @@ export default function App() {
 
       {editingElement && editingElement.type === 'youtube' && (
         <EditYoutubeModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'text' && (
+        <EditTextModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'contact' && (
+        <EditContactModal
           element={editingElement}
           onSave={handleSaveElementData}
           onClose={() => setEditingElement(null)}

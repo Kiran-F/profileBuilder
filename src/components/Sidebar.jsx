@@ -22,7 +22,9 @@ export default function Sidebar() {
     { key: 'bio', label: 'Bio', icon: 'description', desc: 'Roles & Description' },
     { key: 'social', label: 'Social', icon: 'share', desc: 'Social Icons & Links' },
     { key: 'badges', label: 'Badges', icon: 'workspace_premium', desc: 'Square Badges & Credentials' },
-    { key: 'youtube', label: 'YouTube Video', icon: 'play_circle', desc: 'Embed YouTube Video' }
+    { key: 'youtube', label: 'YouTube Video', icon: 'play_circle', desc: 'Embed YouTube Video' },
+    { key: 'text', label: 'Text Block', icon: 'text_fields', desc: 'Custom Heading & Text' },
+    { key: 'contact', label: 'Contact Info', icon: 'contacts', desc: 'Email, Phone, Web & Location' }
   ];
 
   return (
