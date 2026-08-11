@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import IdentityElement from './ProfileElements/IdentityElement';
 import BioElement from './ProfileElements/BioElement';
 import SocialElement from './ProfileElements/SocialElement';
+import BadgesElement from './ProfileElements/BadgesElement';
+import YoutubeElement from './ProfileElements/YoutubeElement';
 import CustomLinkElement from './ProfileElements/CustomLinkElement';
 
 export default function FullProfileWebPage({ initialElements, initialCardBgColor, initialTextColor }) {
@@ -33,6 +35,10 @@ export default function FullProfileWebPage({ initialElements, initialCardBgColor
         return <BioElement data={elem.data} textColor={textColor} />;
       case 'social':
         return <SocialElement data={elem.data} />;
+      case 'badges':
+        return <BadgesElement data={elem.data} textColor={textColor} />;
+      case 'youtube':
+        return <YoutubeElement data={elem.data} textColor={textColor} />;
       case 'custom':
         return <CustomLinkElement data={elem.data} />;
       default:

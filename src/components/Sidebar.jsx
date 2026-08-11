@@ -20,7 +20,9 @@ export default function Sidebar() {
   const navItems = [
     { key: 'identity', label: 'Identity', icon: 'person', desc: 'Avatar & Name' },
     { key: 'bio', label: 'Bio', icon: 'description', desc: 'Roles & Description' },
-    { key: 'social', label: 'Social', icon: 'share', desc: 'Social Icons & Links' }
+    { key: 'social', label: 'Social', icon: 'share', desc: 'Social Icons & Links' },
+    { key: 'badges', label: 'Badges', icon: 'workspace_premium', desc: 'Square Badges & Credentials' },
+    { key: 'youtube', label: 'YouTube Video', icon: 'play_circle', desc: 'Embed YouTube Video' }
   ];
 
   return (
@@ -75,21 +77,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      {/* Add Custom Block button */}
-      <div className="mt-auto pt-3 md:pt-4 border-t border-slate-200/80">
-        <div
-          draggable="true"
-          onMouseDown={() => startDragging('custom')}
-          onTouchStart={() => startDragging('custom')}
-          onDragStart={(e) => handleDragStart(e, 'custom')}
-          className="w-full flex items-center justify-center gap-1.5 py-2.5 md:py-3 px-3 md:px-4 border border-dashed border-indigo-400 rounded-xl text-xs md:text-sm font-semibold text-indigo-700 bg-indigo-50/40 hover:bg-indigo-100/60 transition-colors cursor-grab active:cursor-grabbing shadow-2xs"
-          title="Drag onto canvas to add custom link"
-        >
-          <span className="material-symbols-outlined text-[18px]">add</span>
-          <span>Custom Block</span>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import IdentityElement from './ProfileElements/IdentityElement';
 import BioElement from './ProfileElements/BioElement';
 import SocialElement from './ProfileElements/SocialElement';
+import BadgesElement from './ProfileElements/BadgesElement';
+import YoutubeElement from './ProfileElements/YoutubeElement';
 import CustomLinkElement from './ProfileElements/CustomLinkElement';
 
 export default function Canvas({
@@ -42,10 +44,10 @@ export default function Canvas({
     if (e && e.dataTransfer) {
       try {
         const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-profile-block');
-        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'custom')) {
+        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'custom')) {
           return text;
         }
-      } catch (err) { }
+      } catch (err) {}
     }
     return null;
   };
@@ -109,7 +111,7 @@ export default function Canvas({
     const sidebarType = getDraggedType(e);
     const insertPosition = targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length);
 
-    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'custom')) {
+    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'custom')) {
       onAddElementAtIndex(sidebarType, insertPosition);
     }
 
@@ -126,6 +128,10 @@ export default function Canvas({
         return <BioElement data={elem.data} textColor={textColor} />;
       case 'social':
         return <SocialElement data={elem.data} />;
+      case 'badges':
+        return <BadgesElement data={elem.data} textColor={textColor} />;
+      case 'youtube':
+        return <YoutubeElement data={elem.data} textColor={textColor} />;
       case 'custom':
         return <CustomLinkElement data={elem.data} />;
       default:
@@ -145,7 +151,7 @@ export default function Canvas({
       }}
       className="flex-1 ml-0 sm:ml-44 md:ml-60 bg-[#f7f9fb] p-2 sm:p-4 md:p-8 pb-28 sm:pb-8 flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
     >
-      {/* Central Profile Card Container - FULL WIDTH ON SCREENS < 640px */}
+      {/* Central Profile Card Container */}
       <div
         style={{ backgroundColor: cardBgColor, color: textColor }}
         onDragOver={(e) => handleLineDragOver(e, elements.length)}
@@ -156,10 +162,11 @@ export default function Canvas({
             handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
           }
         }}
-        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${isCanvasDragOver
+        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${
+          isCanvasDragOver
             ? 'border-indigo-500 ring-4 ring-indigo-500/10'
             : 'border-slate-200'
-          }`}
+        }`}
       >
         {/* EMPTY CANVAS INITIAL STATE */}
         {elements.length === 0 && (
@@ -171,10 +178,11 @@ export default function Canvas({
                 handleDropAtPosition(e, 0);
               }
             }}
-            className={`w-full flex-1 min-h-[380px] sm:min-h-[440px] border border-slate-200/80 bg-grid-pattern rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-4 sm:p-8 text-center transition-all cursor-pointer ${isCanvasDragOver
+            className={`w-full flex-1 min-h-[380px] sm:min-h-[440px] border border-slate-200/80 bg-grid-pattern rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-4 sm:p-8 text-center transition-all cursor-pointer ${
+              isCanvasDragOver
                 ? 'border-indigo-500 bg-indigo-50/40 text-indigo-600 scale-[1.01]'
                 : 'bg-white/60 text-slate-700'
-              }`}
+            }`}
           >
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-100/90 text-slate-600 flex items-center justify-center mb-4 shadow-2xs">
               <span className="material-symbols-outlined text-3xl sm:text-4xl">edit_note</span>
@@ -183,7 +191,7 @@ export default function Canvas({
               Your profile canvas is currently empty
             </h3>
             <p className="text-xs text-slate-500 max-w-xs leading-relaxed px-1">
-              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>) from the bottom menu and drop them here to build your profile!
+              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>, <span className="font-semibold text-indigo-600">YouTube</span>) from the menu and drop them here to build your profile!
             </p>
           </div>
         )}
@@ -214,16 +222,16 @@ export default function Canvas({
               >
                 {/* 1. LEFT TYPE BADGE */}
                 <div
-                  className="element-controls absolute top-2 left-2 flex items-center gap-1.5 z-10 opacity-100"
+                  className="element-controls absolute top-1.5 left-1.5 md:top-2 md:left-2 flex items-center gap-1 md:gap-1.5 z-10 opacity-100"
                 >
-                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
-                  <span className="text-[10px] font-mono font-semibold uppercase text-slate-500">
+                  <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-indigo-500"></span>
+                  <span className="text-[9px] md:text-[10px] font-mono font-semibold uppercase text-slate-500">
                     {elem.type}
                   </span>
                 </div>
 
                 {/* 2. RIGHT CONTROLS TOOLBAR (MOVE UP, MOVE DOWN, EDIT, DELETE) */}
-                <div className="element-controls absolute top-2 right-2 flex items-center gap-1 z-10 bg-white/95 backdrop-blur-xs p-1 rounded-lg border border-slate-200 shadow-sm opacity-100">
+                <div className="element-controls absolute top-1.5 right-1.5 md:top-2 md:right-2 flex items-center gap-0.5 md:gap-1 z-10 bg-white/95 backdrop-blur-xs p-0.5 md:p-1 rounded-md md:rounded-lg border border-slate-200 shadow-2xs opacity-100">
                   {/* Move Up Button */}
                   <button
                     type="button"
@@ -232,10 +240,10 @@ export default function Canvas({
                       e.stopPropagation();
                       handleMoveUp(index);
                     }}
-                    className="p-1 rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                     title="Move up"
                   >
-                    <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
+                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">arrow_upward</span>
                   </button>
 
                   {/* Move Down Button */}
@@ -246,13 +254,13 @@ export default function Canvas({
                       e.stopPropagation();
                       handleMoveDown(index);
                     }}
-                    className="p-1 rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
                     title="Move down"
                   >
-                    <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">arrow_downward</span>
                   </button>
 
-                  <div className="w-[1px] h-4 bg-slate-200 mx-0.5"></div>
+                  <div className="w-[1px] h-3 md:h-4 bg-slate-200 mx-0.5"></div>
 
                   {/* Edit Button */}
                   <button
@@ -261,10 +269,10 @@ export default function Canvas({
                       e.stopPropagation();
                       onEditElement(elem);
                     }}
-                    className="p-1.5 rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
                     title="Edit element"
                   >
-                    <span className="material-symbols-outlined text-[16px]">edit</span>
+                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">edit</span>
                   </button>
 
                   {/* Delete Button */}
@@ -274,10 +282,10 @@ export default function Canvas({
                       e.stopPropagation();
                       onDeleteElement(elem.id);
                     }}
-                    className="p-1.5 rounded-md text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                     title="Delete element"
                   >
-                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">delete</span>
                   </button>
                 </div>
 

@@ -4,7 +4,8 @@ import Canvas from './components/Canvas';
 import EditIdentityModal from './components/Modals/EditIdentityModal';
 import EditBioModal from './components/Modals/EditBioModal';
 import EditSocialModal from './components/Modals/EditSocialModal';
-import EditCustomModal from './components/Modals/EditCustomModal';
+import EditBadgesModal from './components/Modals/EditBadgesModal';
+import EditYoutubeModal from './components/Modals/EditYoutubeModal';
 import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
 
@@ -132,7 +133,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white pb-16 sm:pb-0">
-      {/* Top Header Bar - Full Width on screens < 640px */}
+      {/* Top Header Bar */}
       <header className="h-14 ml-0 sm:ml-44 md:ml-60 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-50 sticky top-0 transition-all duration-200">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
@@ -186,8 +187,8 @@ export default function App() {
                   <button
                     onClick={() => setActiveColorTab('background')}
                     className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'background'
-                        ? 'bg-white text-indigo-600 shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white text-indigo-600 shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
                       }`}
                   >
                     <span
@@ -199,8 +200,8 @@ export default function App() {
                   <button
                     onClick={() => setActiveColorTab('text')}
                     className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'text'
-                        ? 'bg-white text-indigo-600 shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white text-indigo-600 shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
                       }`}
                   >
                     <span
@@ -236,8 +237,8 @@ export default function App() {
                           key={preset.hex}
                           onClick={() => setCardBgColor(preset.hex)}
                           className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${cardBgColor.toLowerCase() === preset.hex.toLowerCase()
-                              ? 'border-indigo-600 ring-2 ring-indigo-500/30'
-                              : 'border-slate-200'
+                            ? 'border-indigo-600 ring-2 ring-indigo-500/30'
+                            : 'border-slate-200'
                             }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
@@ -281,8 +282,8 @@ export default function App() {
                           key={preset.hex}
                           onClick={() => setTextColor(preset.hex)}
                           className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${textColor.toLowerCase() === preset.hex.toLowerCase()
-                              ? 'border-indigo-600 ring-2 ring-indigo-500/30'
-                              : 'border-slate-200'
+                            ? 'border-indigo-600 ring-2 ring-indigo-500/30'
+                            : 'border-slate-200'
                             }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
@@ -334,18 +335,18 @@ export default function App() {
       </div>
 
       {/* FIXED BOTTOM DRAGGABLE BAR FOR MOBILE (VISIBLE ON ALL SCREENS < 640px) */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2.5 px-4 flex items-center justify-around shadow-lg select-none">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2.5 px-4 flex items-center gap-4 overflow-x-auto shadow-lg select-none scrollbar-none">
         {/* 1. Identity Block Source */}
         <div
           draggable="true"
           onDragStart={(e) => handleMobileDragStart(e, 'identity')}
           onDragEnd={handleMobileDragEnd}
           onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
           title="Drag onto canvas to add Identity"
         >
           <span className="material-symbols-outlined text-xl text-indigo-600">fingerprint</span>
-          <span className="text-[11px] font-semibold">Identity</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Identity</span>
         </div>
 
         {/* 2. Bio Block Source */}
@@ -354,11 +355,11 @@ export default function App() {
           onDragStart={(e) => handleMobileDragStart(e, 'bio')}
           onDragEnd={handleMobileDragEnd}
           onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
           title="Drag onto canvas to add Bio"
         >
           <span className="material-symbols-outlined text-xl text-indigo-600">description</span>
-          <span className="text-[11px] font-semibold">Bio</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Bio</span>
         </div>
 
         {/* 3. Social Block Source */}
@@ -367,26 +368,52 @@ export default function App() {
           onDragStart={(e) => handleMobileDragStart(e, 'social')}
           onDragEnd={handleMobileDragEnd}
           onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
           title="Drag onto canvas to add Social"
         >
           <span className="material-symbols-outlined text-xl text-indigo-600">share</span>
-          <span className="text-[11px] font-semibold">Social</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Social</span>
         </div>
 
-        {/* 4. Clear Canvas Option */}
+        {/* 4. Badges Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'badges')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
+          title="Drag onto canvas to add Badges"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">workspace_premium</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Badges</span>
+        </div>
+
+        {/* 5. YouTube Video Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'youtube')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
+          title="Drag onto canvas to add YouTube Video"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">play_circle</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">YouTube</span>
+        </div>
+
+        {/* 6. Clear Canvas Option */}
         <button
           type="button"
           disabled={elements.length === 0}
           onClick={handleClearCanvas}
-          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${elements.length > 0
-              ? 'text-red-500 hover:text-red-700'
-              : 'text-slate-300 opacity-40 pointer-events-none'
+          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer flex-shrink-0 ${elements.length > 0
+            ? 'text-red-500 hover:text-red-700'
+            : 'text-slate-300 opacity-40 pointer-events-none'
             }`}
           title="Clear all canvas elements"
         >
           <span className="material-symbols-outlined text-xl">delete_sweep</span>
-          <span className="text-[11px] font-semibold">Clear</span>
+          <span className="text-[10px] font-semibold whitespace-nowrap">Clear</span>
         </button>
       </nav>
 
@@ -415,8 +442,16 @@ export default function App() {
         />
       )}
 
-      {editingElement && editingElement.type === 'custom' && (
-        <EditCustomModal
+      {editingElement && editingElement.type === 'badges' && (
+        <EditBadgesModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'youtube' && (
+        <EditYoutubeModal
           element={editingElement}
           onSave={handleSaveElementData}
           onClose={() => setEditingElement(null)}
