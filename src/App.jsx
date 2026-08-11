@@ -32,7 +32,7 @@ const TEXT_PRESET_COLORS = [
 
 export default function App() {
   const isPreviewMode = new URLSearchParams(window.location.search).get('preview') === 'true';
-  //checks browser's address bar for is preview mode on? if yes, show full profile page
+
   const [elements, setElements] = useState(() => {
     const saved = localStorage.getItem('profile_studio_drag_elements_v4');
     return saved ? JSON.parse(saved) : [];
@@ -48,7 +48,7 @@ export default function App() {
 
   const [editingElement, setEditingElement] = useState(null);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-  const [activeColorTab, setActiveColorTab] = useState('background'); // 'background' | 'text'
+  const [activeColorTab, setActiveColorTab] = useState('background');
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -61,7 +61,13 @@ export default function App() {
   }, [elements, cardBgColor, textColor, isPreviewMode]);
 
   if (isPreviewMode) {
-    return <FullProfileWebPage initialElements={elements} initialCardBgColor={cardBgColor} initialTextColor={textColor} />;
+    return (
+      <FullProfileWebPage
+        initialElements={elements}
+        initialCardBgColor={cardBgColor}
+        initialTextColor={textColor}
+      />
+    );
   }
 
   const handleAddElementAtIndex = (type, index) => {
@@ -111,8 +117,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white">
-      {/* Top Action Bar */}
-      <header className="h-14 ml-60 bg-white/90 backdrop-blur-xs border-b border-slate-200 px-6 flex items-center justify-between z-20 sticky top-0">
+      {/* Top Action Bar - RESPONSIVE MATCHING SIDEBAR WIDTH ON <= 768px */}
+      <header className="h-14 ml-16 sm:ml-44 md:ml-60 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-50 sticky top-0 transition-all duration-200">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
           <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
@@ -121,24 +127,24 @@ export default function App() {
         </div>
 
         {/* Action Controls & Color Picker */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* "Change Colors" Button */}
           <div className="relative">
             <button
               onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[11px] sm:text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs"
               title="Customize Background Color & Text Color"
             >
               <span className="material-symbols-outlined text-base text-indigo-600">palette</span>
-              <span>Change Colors</span>
-              <div className="flex items-center gap-1 ml-1 border-l border-slate-200 pl-1.5">
+              <span className="hidden sm:inline">Change Colors</span>
+              <div className="flex items-center gap-1 ml-0.5 sm:ml-1 border-l border-slate-200 pl-1 sm:pl-1.5">
                 <span
-                  className="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-2xs"
+                  className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-slate-300 shadow-2xs"
                   style={{ backgroundColor: cardBgColor }}
                   title="Current Background"
                 ></span>
                 <span
-                  className="w-3.5 h-3.5 rounded-full border border-slate-300 shadow-2xs"
+                  className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-slate-300 shadow-2xs"
                   style={{ backgroundColor: textColor }}
                   title="Current Text Color"
                 ></span>
@@ -147,8 +153,7 @@ export default function App() {
 
             {/* Color Picker Dropdown Popover */}
             {isColorPickerOpen && (
-              <div className="absolute right-0 mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 animate-fadeIn">
-                {/* Popover Header */}
+              <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white border border-slate-200 rounded-2xl shadow-xl p-3.5 sm:p-4 z-50 animate-fadeIn">
                 <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
                   <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-sm text-indigo-600">tune</span>
@@ -162,14 +167,14 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Tab Switches: Change Background Color vs Change Text Color */}
                 <div className="flex bg-slate-100 p-1 rounded-xl mb-4 gap-1">
                   <button
                     onClick={() => setActiveColorTab('background')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'background'
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                      activeColorTab === 'background'
                         ? 'bg-white text-indigo-600 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
-                      }`}
+                    }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-slate-300"
@@ -179,10 +184,11 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => setActiveColorTab('text')}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${activeColorTab === 'text'
+                    className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                      activeColorTab === 'text'
                         ? 'bg-white text-indigo-600 shadow-2xs'
                         : 'text-slate-600 hover:text-slate-900'
-                      }`}
+                    }`}
                   >
                     <span
                       className="w-2.5 h-2.5 rounded-full border border-slate-300"
@@ -192,7 +198,6 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Option 1: CHANGE BACKGROUND COLOR */}
                 {activeColorTab === 'background' && (
                   <div>
                     <span className="text-[11px] font-semibold text-slate-700 block mb-2">
@@ -217,17 +222,19 @@ export default function App() {
                         <button
                           key={preset.hex}
                           onClick={() => setCardBgColor(preset.hex)}
-                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${cardBgColor.toLowerCase() === preset.hex.toLowerCase()
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${
+                            cardBgColor.toLowerCase() === preset.hex.toLowerCase()
                               ? 'border-indigo-600 ring-2 ring-indigo-500/30'
                               : 'border-slate-200'
-                            }`}
+                          }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
                         >
                           {cardBgColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
-                                }`}
+                              className={`material-symbols-outlined text-sm ${
+                                preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
+                              }`}
                             >
                               check
                             </span>
@@ -238,7 +245,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Option 2: CHANGE TEXT COLOR */}
                 {activeColorTab === 'text' && (
                   <div>
                     <span className="text-[11px] font-semibold text-slate-700 block mb-2">
@@ -263,17 +269,19 @@ export default function App() {
                         <button
                           key={preset.hex}
                           onClick={() => setTextColor(preset.hex)}
-                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${textColor.toLowerCase() === preset.hex.toLowerCase()
+                          className={`w-full h-8 rounded-lg border flex items-center justify-center transition-all cursor-pointer hover:scale-105 ${
+                            textColor.toLowerCase() === preset.hex.toLowerCase()
                               ? 'border-indigo-600 ring-2 ring-indigo-500/30'
                               : 'border-slate-200'
-                            }`}
+                          }`}
                           style={{ backgroundColor: preset.hex }}
                           title={preset.name}
                         >
                           {textColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
-                                }`}
+                              className={`material-symbols-outlined text-sm ${
+                                preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
+                              }`}
                             >
                               check
                             </span>

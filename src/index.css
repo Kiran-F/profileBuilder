@@ -14,6 +14,13 @@
 }
 
 /* Custom Utilities for Profile Builder Studio */
+.bg-grid-pattern {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+}
+
 .neo-skeuomorphic-shadow {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
@@ -22,10 +29,10 @@
   box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.06);
 }
 
-/* Element Wrapper & Controls: Outline and controls visible ONLY on hover */
+/* Element Wrapper & Controls: Controls ALWAYS 100% visible all the time, irrespective of hovering */
 .element-wrapper {
   position: relative;
-  border: 1px solid transparent;
+  border: 1px solid rgba(226, 232, 240, 0.8);
   transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
 
@@ -35,14 +42,6 @@
 }
 
 .element-controls {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease-in-out;
-}
-
-.element-wrapper:hover .element-controls,
-.element-controls:hover,
-.element-controls:focus-within {
   opacity: 1 !important;
   pointer-events: auto !important;
 }

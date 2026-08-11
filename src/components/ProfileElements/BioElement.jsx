@@ -20,7 +20,7 @@ export default function BioElement({ data, textColor }) {
     <div className="w-full text-center my-2">
       <div
         className="flex flex-col items-center justify-center gap-1 text-sm font-medium opacity-90"
-        style={textColor ? { color: textColor } : {}}
+        style={textColor ? { color: textColor, wordBreak: 'break-all' } : { wordBreak: 'break-all' }}
       >
         {lines.map((line, idx) => (
           <p
