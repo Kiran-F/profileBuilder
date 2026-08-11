@@ -115,19 +115,34 @@ export default function App() {
     window.open(previewUrl, '_blank');
   };
 
+  const handleMobileDragStart = (e, type) => {
+    window.__draggedSidebarType = type;
+    window.__draggedSource = 'sidebar';
+    try {
+      e.dataTransfer.setData('text/plain', type);
+      e.dataTransfer.setData('application/x-profile-block', type);
+      e.dataTransfer.effectAllowed = 'copy';
+    } catch (err) {}
+  };
+
+  const handleMobileDragEnd = () => {
+    window.__draggedSidebarType = null;
+    window.__draggedSource = null;
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white">
-      {/* Top Action Bar - RESPONSIVE MATCHING SIDEBAR WIDTH ON <= 768px */}
-      <header className="h-14 ml-16 sm:ml-44 md:ml-60 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-50 sticky top-0 transition-all duration-200">
+    <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white pb-16 sm:pb-0">
+      {/* Top Header Bar - Full Width on screens < 640px */}
+      <header className="h-14 ml-0 sm:ml-44 md:ml-60 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-50 sticky top-0 transition-all duration-200">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-600 truncate max-w-[140px] sm:max-w-none">
             Interactive Profile Studio
           </span>
         </div>
 
         {/* Action Controls & Color Picker */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* "Change Colors" Button */}
           <div className="relative">
             <button
@@ -295,21 +310,14 @@ export default function App() {
             )}
           </div>
 
-          {elements.length > 0 && (
-            <button
-              onClick={handleClearCanvas}
-              className="text-xs font-medium text-slate-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              Clear Canvas
-            </button>
-          )}
-
+          {/* PREVIEW BUTTON: SHOW "Preview" TEXT ON SCREENS >= 768px (md), ICON-ONLY ON SMALLER SCREENS */}
           <button
             onClick={handleOpenPreviewTab}
-            className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-2.5 md:px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+            title="Preview Profile in new tab"
           >
-            <span className="material-symbols-outlined text-sm">open_in_new</span>
-            Preview Profile
+            <span className="material-symbols-outlined text-base">open_in_new</span>
+            <span className="hidden md:inline">Preview</span>
           </button>
         </div>
       </header>
@@ -330,6 +338,64 @@ export default function App() {
           onDeleteElement={handleDeleteElement}
         />
       </div>
+
+      {/* FIXED BOTTOM DRAGGABLE BAR FOR MOBILE (VISIBLE ON ALL SCREENS < 640px) */}
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2.5 px-4 flex items-center justify-around shadow-lg select-none">
+        {/* 1. Identity Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'identity')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          title="Drag onto canvas to add Identity"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">fingerprint</span>
+          <span className="text-[11px] font-semibold">Identity</span>
+        </div>
+
+        {/* 2. Bio Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'bio')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          title="Drag onto canvas to add Bio"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">description</span>
+          <span className="text-[11px] font-semibold">Bio</span>
+        </div>
+
+        {/* 3. Social Block Source */}
+        <div
+          draggable="true"
+          onDragStart={(e) => handleMobileDragStart(e, 'social')}
+          onDragEnd={handleMobileDragEnd}
+          onMouseUp={handleMobileDragEnd}
+          className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing"
+          title="Drag onto canvas to add Social"
+        >
+          <span className="material-symbols-outlined text-xl text-indigo-600">share</span>
+          <span className="text-[11px] font-semibold">Social</span>
+        </div>
+
+        {/* 4. Clear Canvas Option */}
+        <button
+          type="button"
+          disabled={elements.length === 0}
+          onClick={handleClearCanvas}
+          className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer ${
+            elements.length > 0
+              ? 'text-red-500 hover:text-red-700'
+              : 'text-slate-300 opacity-40 pointer-events-none'
+          }`}
+          title="Clear all canvas elements"
+        >
+          <span className="material-symbols-outlined text-xl">delete_sweep</span>
+          <span className="text-[11px] font-semibold">Clear</span>
+        </button>
+      </nav>
 
       {/* Modals */}
       {editingElement && editingElement.type === 'identity' && (

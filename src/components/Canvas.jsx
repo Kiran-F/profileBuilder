@@ -143,9 +143,9 @@ export default function Canvas({
           handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
         }
       }}
-      className="flex-1 ml-16 sm:ml-44 md:ml-60 bg-[#f7f9fb] p-2 sm:p-3 md:p-8 flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
+      className="flex-1 ml-0 sm:ml-44 md:ml-60 bg-[#f7f9fb] p-2 sm:p-4 md:p-8 pb-28 sm:pb-8 flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
     >
-      {/* Central Profile Card Container - DYNAMIC FULL WIDTH & COMPACT PADDING ON SCREENS <= 768px */}
+      {/* Central Profile Card Container - FULL WIDTH ON SCREENS < 640px */}
       <div
         style={{ backgroundColor: cardBgColor, color: textColor }}
         onDragOver={(e) => handleLineDragOver(e, elements.length)}
@@ -156,7 +156,7 @@ export default function Canvas({
             handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
           }
         }}
-        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-5 md:p-12 flex flex-col items-center relative min-h-[520px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${
+        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${
           isCanvasDragOver
             ? 'border-indigo-500 ring-4 ring-indigo-500/10'
             : 'border-slate-200'
@@ -185,12 +185,12 @@ export default function Canvas({
               Your profile canvas is currently empty
             </h3>
             <p className="text-xs text-slate-500 max-w-xs leading-relaxed px-1">
-              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>) from the side menu and drop them here to build your profile!
+              Drag elements (<span className="font-semibold text-indigo-600">Identity</span>, <span className="font-semibold text-indigo-600">Bio</span>, <span className="font-semibold text-indigo-600">Social</span>) from the bottom menu and drop them here to build your profile!
             </p>
           </div>
         )}
 
-        {/* POPULATED CANVAS ELEMENTS - CONTROLS ALWAYS VISIBLE */}
+        {/* POPULATED CANVAS ELEMENTS */}
         {elements.map((elem, index) => {
           const showTopLine = dropTargetIndex === index;
 
