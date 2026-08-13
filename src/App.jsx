@@ -33,20 +33,65 @@ const TEXT_PRESET_COLORS = [
   { hex: '#6b21a8', name: 'Deep Purple' }
 ];
 
+export const cleanAndRefreshLocalStorage = (elements, cardBgColor, textColor) => {
+  try {
+    // Wipe all old/stale entries from localStorage & sessionStorage to free up quota
+    localStorage.clear();
+    sessionStorage.clear();
+  } catch (err) {
+    console.warn('Storage clear warning:', err);
+  }
+
+  // Save ONLY the fresh active snapshot
+  const freshPayload = JSON.stringify({ elements, cardBgColor, textColor });
+
+  try {
+    localStorage.setItem('profile_studio_drag_elements_v4', JSON.stringify(elements));
+    localStorage.setItem('profile_studio_card_bg', cardBgColor);
+    localStorage.setItem('profile_studio_text_color', textColor);
+    localStorage.setItem('profile_studio_preview_data', freshPayload);
+  } catch (err) {
+    console.warn('localStorage full after wipe, writing to sessionStorage fallback:', err);
+    try {
+      sessionStorage.setItem('profile_studio_drag_elements_v4', JSON.stringify(elements));
+      sessionStorage.setItem('profile_studio_card_bg', cardBgColor);
+      sessionStorage.setItem('profile_studio_text_color', textColor);
+      sessionStorage.setItem('profile_studio_preview_data', freshPayload);
+    } catch (sErr) {
+      console.warn('sessionStorage also full:', sErr);
+    }
+  }
+};
+
+export const safeSetLocalStorage = (key, data) => {
+  try {
+    const stringified = typeof data === 'string' ? data : JSON.stringify(data);
+    localStorage.setItem(key, stringified);
+  } catch (err) {
+    console.warn(`localStorage quota exceeded for key "${key}". Fallback to sessionStorage used.`, err);
+    try {
+      const stringified = typeof data === 'string' ? data : JSON.stringify(data);
+      sessionStorage.setItem(key, stringified);
+    } catch (sessionErr) {
+      console.warn(`sessionStorage also full for key "${key}". Active in-memory React state is preserved.`, sessionErr);
+    }
+  }
+};
+
 export default function App() {
   const isPreviewMode = new URLSearchParams(window.location.search).get('preview') === 'true';
 
   const [elements, setElements] = useState(() => {
-    const saved = localStorage.getItem('profile_studio_drag_elements_v4');
+    const saved = localStorage.getItem('profile_studio_drag_elements_v4') || sessionStorage.getItem('profile_studio_drag_elements_v4');
     return saved ? JSON.parse(saved) : [];
   });
 
   const [cardBgColor, setCardBgColor] = useState(() => {
-    return localStorage.getItem('profile_studio_card_bg') || '#ffffff';
+    return localStorage.getItem('profile_studio_card_bg') || sessionStorage.getItem('profile_studio_card_bg') || '#ffffff';
   });
 
   const [textColor, setTextColor] = useState(() => {
-    return localStorage.getItem('profile_studio_text_color') || '#191c1e';
+    return localStorage.getItem('profile_studio_text_color') || sessionStorage.getItem('profile_studio_text_color') || '#191c1e';
   });
 
   const [editingElement, setEditingElement] = useState(null);
@@ -57,9 +102,9 @@ export default function App() {
     document.documentElement.classList.remove('dark');
     document.documentElement.classList.add('light');
     if (!isPreviewMode) {
-      localStorage.setItem('profile_studio_drag_elements_v4', JSON.stringify(elements));
-      localStorage.setItem('profile_studio_card_bg', cardBgColor);
-      localStorage.setItem('profile_studio_text_color', textColor);
+      safeSetLocalStorage('profile_studio_drag_elements_v4', elements);
+      safeSetLocalStorage('profile_studio_card_bg', cardBgColor);
+      safeSetLocalStorage('profile_studio_text_color', textColor);
     }
   }, [elements, cardBgColor, textColor, isPreviewMode]);
 
@@ -109,11 +154,14 @@ export default function App() {
 
   const handleClearCanvas = () => {
     setElements([]);
-    localStorage.removeItem('profile_studio_drag_elements_v4');
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (e) {}
   };
 
   const handleOpenPreviewTab = () => {
-    localStorage.setItem('profile_studio_preview_data', JSON.stringify({ elements, cardBgColor, textColor }));
+    cleanAndRefreshLocalStorage(elements, cardBgColor, textColor);
     const previewUrl = `${window.location.origin}${window.location.pathname}?preview=true`;
     window.open(previewUrl, '_blank');
   };

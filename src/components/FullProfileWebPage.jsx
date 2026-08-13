@@ -13,17 +13,34 @@ export default function FullProfileWebPage({ initialElements, initialCardBgColor
   const [textColor, setTextColor] = useState(initialTextColor || '#191c1e');
 
   useEffect(() => {
-    const saved = localStorage.getItem('profile_studio_preview_data');
-    if (saved) {
+    // 1. If initial props are passed directly (e.g. in App or Preview modal), prioritize active props!
+    if (initialCardBgColor) setCardBgColor(initialCardBgColor);
+    if (initialTextColor) setTextColor(initialTextColor);
+    if (initialElements && Array.isArray(initialElements)) setElements(initialElements);
+
+    // 2. Only check storage for standalone tab mode when props are missing
+    if (!initialCardBgColor && !initialElements) {
+      let saved = null;
       try {
-        const parsed = JSON.parse(saved);
-        if (parsed.elements) setElements(parsed.elements);
-        if (parsed.cardBgColor) setCardBgColor(parsed.cardBgColor);
-        if (parsed.textColor) setTextColor(parsed.textColor);
-      } catch (e) {
-        if (Array.isArray(JSON.parse(saved))) {
-          setElements(JSON.parse(saved));
+        saved = localStorage.getItem('profile_studio_preview_data') || sessionStorage.getItem('profile_studio_preview_data');
+        if (!saved) {
+          saved = localStorage.getItem('profile_studio_drag_elements_v4') || sessionStorage.getItem('profile_studio_drag_elements_v4');
         }
+      } catch (e) {
+        console.warn('Storage read error:', e);
+      }
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.elements && Array.isArray(parsed.elements)) {
+            setElements(parsed.elements);
+          } else if (Array.isArray(parsed)) {
+            setElements(parsed);
+          }
+          if (parsed.cardBgColor) setCardBgColor(parsed.cardBgColor);
+          if (parsed.textColor) setTextColor(parsed.textColor);
+        } catch (e) {}
       }
     }
   }, [initialElements, initialCardBgColor, initialTextColor]);

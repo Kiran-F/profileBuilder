@@ -27,6 +27,10 @@ export const EMPTY_ELEMENT_DATA = {
     fontFamily: 'Inter'
   },
   social: {
+    iconStyle: 'filled',
+    colorMode: 'colored',
+    iconShape: 'circle',
+    iconSize: 'medium',
     links: [
       { platform: 'whatsapp', name: 'WhatsApp', url: '', active: false, color: '#22c55e' },
       { platform: 'facebook', name: 'Facebook', url: '', active: false, color: '#2563eb' },
@@ -39,7 +43,8 @@ export const EMPTY_ELEMENT_DATA = {
       { platform: 'snapchat', name: 'Snapchat', url: '', active: false, color: '#fffc00' },
       { platform: 'dribbble', name: 'Dribbble', url: '', active: false, color: '#ea4c89' },
       { platform: 'x', name: 'X', url: '', active: false, color: '#000000' },
-      { platform: 'document', name: 'Document', url: '', active: false, color: '#64748b' }
+      { platform: 'document', name: 'Document', url: '', active: false, color: '#64748b' },
+      { platform: 'discord', name: 'Discord Server', url: '', active: false, color: '#5865f2' }
     ]
   },
   badges: {
