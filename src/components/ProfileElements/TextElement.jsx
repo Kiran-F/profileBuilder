@@ -1,9 +1,47 @@
 import React from 'react';
 
+const FONT_MAP = {
+  'Inter': "'Inter', sans-serif",
+  'Bebas Neue': "'Bebas Neue', cursive",
+  'Roboto': "'Roboto', sans-serif",
+  'sans-serif': 'sans-serif',
+  'Open Sans': "'Open Sans', sans-serif",
+  'Lato': "'Lato', sans-serif",
+  'Sekuya': "'Sekuya', 'Cinzel', serif",
+  'Roboto Mono': "'Roboto Mono', monospace",
+  'Arimo': "'Arimo', sans-serif",
+  'Montserrat': "'Montserrat', sans-serif",
+  'Bitcount Prop Single': "'Bitcount Prop Single', 'Pixelify Sans', 'Silkscreen', cursive",
+  'Rubik Spray Paint': "'Rubik Spray Paint', cursive",
+  'Merriweather': "'Merriweather', serif",
+  'Oswald': "'Oswald', sans-serif",
+  'Edu VIC WA NT Hand Precursive': "'Edu VIC WA NT Hand Precursive', cursive",
+  'Inconsolata': "'Inconsolata', monospace",
+  'JetBrains Mono': "'JetBrains Mono', monospace",
+  'Dancing Script': "'Dancing Script', cursive",
+  'Caveat': "'Caveat', cursive",
+  'Archivo Black': "'Archivo Black', sans-serif",
+  'Black Ops One': "'Black Ops One', display",
+  'Saira': "'Saira', sans-serif",
+  'Changa One': "'Changa One', display",
+  'Orbitron': "'Orbitron', sans-serif",
+  'Indie Flower': "'Indie Flower', cursive"
+};
+
 export default function TextElement({ data, textColor }) {
   if (!data) return null;
 
-  const { heading, content, alignment = 'center', fontSize = 'medium' } = data;
+  const {
+    heading,
+    content,
+    alignment = 'center',
+    fontSize = 'medium',
+    fontColor = '',
+    isBold = false,
+    isItalic = false,
+    isUnderline = false,
+    fontFamily = 'Inter'
+  } = data;
 
   const getAlignClass = () => {
     switch (alignment) {
@@ -22,11 +60,28 @@ export default function TextElement({ data, textColor }) {
       case 'small':
         return 'text-xs sm:text-sm leading-relaxed';
       case 'large':
-        return 'text-base sm:text-lg leading-relaxed font-medium';
+        return 'text-base sm:text-lg leading-relaxed';
+      case 'xlarge':
+        return 'text-lg sm:text-xl leading-relaxed';
       case 'medium':
       default:
         return 'text-sm sm:text-base leading-relaxed';
     }
+  };
+
+  const getCustomStyle = () => {
+    const selectedFamily = FONT_MAP[fontFamily] || 'inherit';
+    const effectiveColor = fontColor || textColor || 'inherit';
+
+    return {
+      fontFamily: selectedFamily,
+      color: effectiveColor,
+      fontWeight: isBold ? '700' : '400',
+      fontStyle: isItalic ? 'italic' : 'normal',
+      textDecoration: isUnderline ? 'underline' : 'none',
+      wordBreak: 'break-word',
+      textAlign: alignment
+    };
   };
 
   const hasHeading = heading && heading.trim() !== '';
@@ -41,21 +96,18 @@ export default function TextElement({ data, textColor }) {
   }
 
   return (
-    <div className={`w-full flex flex-col ${getAlignClass()} py-2 px-1 space-y-1.5`}>
+    <div
+      className={`w-full flex flex-col ${getAlignClass()} py-2 px-1 space-y-1.5 transition-all`}
+      style={getCustomStyle()}
+    >
       {hasHeading && (
-        <h3
-          className="text-sm sm:text-base font-bold tracking-wide"
-          style={{ color: textColor }}
-        >
+        <h3 className="text-base sm:text-lg font-bold tracking-wide mb-0.5">
           {heading}
         </h3>
       )}
 
       {hasContent && (
-        <p
-          className={`w-full whitespace-pre-line opacity-90 ${getContentFontClass()}`}
-          style={{ color: textColor }}
-        >
+        <p className={`w-full whitespace-pre-line opacity-90 ${getContentFontClass()}`}>
           {content}
         </p>
       )}

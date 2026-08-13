@@ -48,7 +48,7 @@ export default function Canvas({
         if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact')) {
           return text;
         }
-      } catch (err) {}
+      } catch (err) { }
     }
     return null;
   };
@@ -165,11 +165,10 @@ export default function Canvas({
             handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
           }
         }}
-        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${
-          isCanvasDragOver
-            ? 'border-indigo-500 ring-4 ring-indigo-500/10'
-            : 'border-slate-200'
-        }`}
+        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${isCanvasDragOver
+          ? 'border-indigo-500 ring-4 ring-indigo-500/10'
+          : 'border-slate-200'
+          }`}
       >
         {/* EMPTY CANVAS INITIAL STATE */}
         {elements.length === 0 && (
@@ -181,11 +180,10 @@ export default function Canvas({
                 handleDropAtPosition(e, 0);
               }
             }}
-            className={`w-full flex-1 min-h-[380px] sm:min-h-[440px] border border-slate-200/80 bg-grid-pattern rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-4 sm:p-8 text-center transition-all cursor-pointer ${
-              isCanvasDragOver
-                ? 'border-indigo-500 bg-indigo-50/40 text-indigo-600 scale-[1.01]'
-                : 'bg-white/60 text-slate-700'
-            }`}
+            className={`w-full flex-1 min-h-[380px] sm:min-h-[440px] border border-slate-200/80 bg-grid-pattern rounded-xl sm:rounded-2xl flex flex-col items-center justify-center p-4 sm:p-8 text-center transition-all cursor-pointer ${isCanvasDragOver
+              ? 'border-indigo-500 bg-indigo-50/40 text-indigo-600 scale-[1.01]'
+              : 'bg-white/60 text-slate-700'
+              }`}
           >
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-100/90 text-slate-600 flex items-center justify-center mb-4 shadow-2xs">
               <span className="material-symbols-outlined text-3xl sm:text-4xl">edit_note</span>
@@ -221,7 +219,7 @@ export default function Canvas({
               <div
                 onDragOver={(e) => handleItemDragOver(e, index)}
                 onDrop={(e) => handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : index)}
-                className="relative w-full group element-wrapper p-3 sm:p-4 pt-6 sm:pt-7 rounded-xl transition-all border border-slate-200/80 hover:border-indigo-400 bg-white/40 my-1.5 cursor-default"
+                className="relative w-full group element-wrapper p-3 sm:p-4 pt-6 sm:pt-7 rounded-xl transition-all border border-slate-200/80 hover:border-indigo-400 bg-white/10 my-1.5 cursor-default"
               >
                 {/* 1. LEFT TYPE BADGE */}
                 <div

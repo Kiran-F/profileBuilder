@@ -1,9 +1,46 @@
 import React from 'react';
 
+const FONT_MAP = {
+  'Inter': "'Inter', sans-serif",
+  'Bebas Neue': "'Bebas Neue', cursive",
+  'Roboto': "'Roboto', sans-serif",
+  'sans-serif': 'sans-serif',
+  'Open Sans': "'Open Sans', sans-serif",
+  'Lato': "'Lato', sans-serif",
+  'Sekuya': "'Sekuya', 'Cinzel', serif",
+  'Roboto Mono': "'Roboto Mono', monospace",
+  'Arimo': "'Arimo', sans-serif",
+  'Montserrat': "'Montserrat', sans-serif",
+  'Bitcount Prop Single': "'Bitcount Prop Single', 'Pixelify Sans', 'Silkscreen', cursive",
+  'Rubik Spray Paint': "'Rubik Spray Paint', cursive",
+  'Merriweather': "'Merriweather', serif",
+  'Oswald': "'Oswald', sans-serif",
+  'Edu VIC WA NT Hand Precursive': "'Edu VIC WA NT Hand Precursive', cursive",
+  'Inconsolata': "'Inconsolata', monospace",
+  'JetBrains Mono': "'JetBrains Mono', monospace",
+  'Dancing Script': "'Dancing Script', cursive",
+  'Caveat': "'Caveat', cursive",
+  'Archivo Black': "'Archivo Black', sans-serif",
+  'Black Ops One': "'Black Ops One', display",
+  'Saira': "'Saira', sans-serif",
+  'Changa One': "'Changa One', display",
+  'Orbitron': "'Orbitron', sans-serif",
+  'Indie Flower': "'Indie Flower', cursive"
+};
+
 export default function BadgesElement({ data, textColor }) {
   if (!data) return null;
 
-  const { sectionTitle, items = [] } = data;
+  const {
+    sectionTitle,
+    items = [],
+    fontSize = 'medium',
+    fontColor = '',
+    isBold = false,
+    isItalic = false,
+    isUnderline = false,
+    fontFamily = 'Inter'
+  } = data;
 
   // Filter out any badge credentials that are completely empty (no image, title, or link)
   const validItems = items.filter((badge) => {
@@ -21,12 +58,40 @@ export default function BadgesElement({ data, textColor }) {
     );
   }
 
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case 'small':
+        return 'text-xs';
+      case 'large':
+        return 'text-base';
+      case 'xlarge':
+        return 'text-lg';
+      case 'medium':
+      default:
+        return 'text-sm';
+    }
+  };
+
+  const getCustomStyle = () => {
+    const selectedFamily = FONT_MAP[fontFamily] || 'inherit';
+    const effectiveColor = fontColor || textColor || 'inherit';
+
+    return {
+      fontFamily: selectedFamily,
+      color: effectiveColor,
+      fontWeight: isBold ? '700' : '600',
+      fontStyle: isItalic ? 'italic' : 'normal',
+      textDecoration: isUnderline ? 'underline' : 'none',
+      wordBreak: 'break-word'
+    };
+  };
+
   return (
     <div className="w-full flex flex-col items-center py-2 px-1">
       {sectionTitle && (
         <h4
           className="text-xs sm:text-sm font-bold tracking-wider uppercase mb-4 text-center opacity-80"
-          style={{ color: textColor }}
+          style={getCustomStyle()}
         >
           {sectionTitle}
         </h4>
@@ -54,8 +119,8 @@ export default function BadgesElement({ data, textColor }) {
               </div>
               {badge.title && (
                 <span
-                  className="text-xs sm:text-sm font-semibold text-center truncate max-w-[96px] sm:max-w-[128px] opacity-90"
-                  style={{ color: textColor }}
+                  className={`text-center truncate max-w-[96px] sm:max-w-[128px] opacity-90 transition-all ${getFontSizeClass()}`}
+                  style={getCustomStyle()}
                   title={badge.title}
                 >
                   {badge.title}

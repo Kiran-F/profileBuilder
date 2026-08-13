@@ -1,13 +1,30 @@
 export const EMPTY_ELEMENT_DATA = {
   identity: {
     avatarUrl: '',
+    firstName: '',
+    lastName: '',
     name: '',
-    title: '',
-    subtitle: ''
+    jobTitle: '',
+    designation: '',
+    department: '',
+    companyName: '',
+    subtitle: '',
+    fontSize: 'medium',
+    fontColor: '',
+    isBold: false,
+    isItalic: false,
+    isUnderline: false,
+    fontFamily: 'Inter'
   },
   bio: {
     bioLines: [],
-    bioText: ''
+    bioText: '',
+    fontSize: 'medium',
+    fontColor: '',
+    isBold: false,
+    isItalic: false,
+    isUnderline: false,
+    fontFamily: 'Inter'
   },
   social: {
     links: [
@@ -27,24 +44,45 @@ export const EMPTY_ELEMENT_DATA = {
   },
   badges: {
     sectionTitle: 'Badges & Credentials',
-    items: []
+    items: [],
+    fontSize: 'medium',
+    fontColor: '',
+    isBold: false,
+    isItalic: false,
+    isUnderline: false,
+    fontFamily: 'Inter'
   },
   youtube: {
     title: '',
-    videoUrl: ''
+    videoUrl: '',
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    shadowSize: 'medium',
+    shadowColor: '#0f172a'
   },
   text: {
     heading: '',
     content: '',
     alignment: 'center',
-    fontSize: 'medium'
+    fontSize: 'medium',
+    fontColor: '',
+    isBold: false,
+    isItalic: false,
+    isUnderline: false,
+    fontFamily: 'Inter'
   },
   contact: {
     sectionTitle: 'Contact Information',
     email: '',
     phone: '',
     website: '',
-    location: ''
+    location: '',
+    fontSize: 'medium',
+    fontColor: '',
+    isBold: false,
+    isItalic: false,
+    isUnderline: false,
+    fontFamily: 'Inter'
   }
 };
 
@@ -52,7 +90,7 @@ export const TEMPLATE_ELEMENTS = {
   identity: {
     type: 'identity',
     title: 'Identity',
-    description: 'Avatar & Name',
+    description: 'Avatar, Name & Work Info',
     icon: 'person'
   },
   bio: {

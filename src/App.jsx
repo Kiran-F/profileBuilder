@@ -122,8 +122,8 @@ export default function App() {
     window.__draggedSidebarType = type;
     window.__draggedSource = 'sidebar';
     try {
-      e.dataTransfer.setData('text/plain', type);
-      e.dataTransfer.setData('application/x-profile-block', type);
+      e.dataTransfer.setData('text/plain', type); // Ensures every browser understands the drag data payload
+      e.dataTransfer.setData('application/x-profile-block', type); // Ensures the Canvas knows this is a VALID profile block (and NOT an external image/file/link)
       e.dataTransfer.effectAllowed = 'copy';
     } catch (err) { }
   };
