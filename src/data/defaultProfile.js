@@ -103,6 +103,35 @@ export const EMPTY_ELEMENT_DATA = {
     isBold: true,
     isItalic: false,
     items: []
+  },
+  gallery: {
+    sectionTitle: '',
+    layoutStyle: 'grid',
+    imageAspect: 'landscape',
+    imageRadius: 'rounded-2xl',
+    hasShadow: true,
+    shadowColor: '#000000',
+    fontSize: 'medium',
+    fontFamily: 'Inter',
+    fontColor: '#0f172a',
+    isBold: true,
+    isItalic: false,
+    items: []
+  },
+  banner: {
+    bannerType: 'gradient', // 'image' or 'gradient'
+    imageUrl: '',
+    gradientPreset: 'indigo-purple', // 'indigo-purple', 'emerald-teal', 'sunset-orange', 'midnight-dark', 'rose-pink'
+    bgColor: '#4648d4',
+    bannerHeight: 'medium', // 'compact' (100px), 'medium' (160px), 'tall' (220px)
+    bannerRadius: 'rounded-2xl', // 'rounded-none', 'rounded-2xl', 'rounded-3xl'
+    title: '', // Optional overlay text (e.g. "Welcome to my profile")
+    fontSize: 'medium',
+    fontFamily: 'Inter',
+    textColor: '#ffffff',
+    isBold: true,
+    isItalic: false,
+    hasOverlay: true
   }
 };
 

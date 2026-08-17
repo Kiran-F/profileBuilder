@@ -7,6 +7,8 @@ import YoutubeElement from './ProfileElements/YoutubeElement';
 import TextElement from './ProfileElements/TextElement';
 import ContactElement from './ProfileElements/ContactElement';
 import LinksElement from './ProfileElements/LinksElement';
+import GalleryElement from './ProfileElements/GalleryElement';
+import BannerElement from './ProfileElements/BannerElement';
 
 export default function Canvas({
   elements,
@@ -46,7 +48,7 @@ export default function Canvas({
     if (e && e.dataTransfer) {
       try {
         const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-profile-block');
-        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact' || text === 'links')) {
+        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact' || text === 'links' || text === 'gallery' || text === 'banner')) {
           return text;
         }
       } catch (err) { }
@@ -56,6 +58,9 @@ export default function Canvas({
 
   const handleMoveUp = (index) => {
     if (index <= 0) return;
+    // Don't allow moving an element above the top banner at index 0
+    if (index === 1 && elements[0]?.type === 'banner') return;
+
     const updated = [...elements];
     const [item] = updated.splice(index, 1);
     updated.splice(index - 1, 0, item);
@@ -64,6 +69,9 @@ export default function Canvas({
 
   const handleMoveDown = (index) => {
     if (index >= elements.length - 1) return;
+    // Don't allow moving top banner downwards if user wants it fixed at top
+    if (index === 0 && elements[0]?.type === 'banner') return;
+
     const updated = [...elements];
     const [item] = updated.splice(index, 1);
     updated.splice(index + 1, 0, item);
@@ -99,9 +107,10 @@ export default function Canvas({
     setIsCanvasDragOver(false);
 
     const sidebarType = getDraggedType(e);
-    const insertPosition = targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length);
+    // If dragging a top banner element, ALWAYS lock position to index 0!
+    let insertPosition = sidebarType === 'banner' ? 0 : (targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length));
 
-    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact' || sidebarType === 'links')) {
+    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact' || sidebarType === 'links' || sidebarType === 'gallery' || sidebarType === 'banner')) {
       onAddElementAtIndex(sidebarType, insertPosition);
     }
 
@@ -112,6 +121,8 @@ export default function Canvas({
 
   const renderElementBody = (elem) => {
     switch (elem.type) {
+      case 'banner':
+        return <BannerElement data={elem.data} />;
       case 'identity':
         return <IdentityElement data={elem.data} textColor={textColor} />;
       case 'bio':
@@ -128,6 +139,8 @@ export default function Canvas({
         return <ContactElement data={elem.data} textColor={textColor} />;
       case 'links':
         return <LinksElement data={elem.data} textColor={textColor} />;
+      case 'gallery':
+        return <GalleryElement data={elem.data} textColor={textColor} />;
       default:
         return null;
     }

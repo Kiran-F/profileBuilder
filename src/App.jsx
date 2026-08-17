@@ -9,6 +9,8 @@ import EditYoutubeModal from './components/Modals/EditYoutubeModal';
 import EditTextModal from './components/Modals/EditTextModal';
 import EditContactModal from './components/Modals/EditContactModal';
 import EditLinksModal from './components/Modals/EditLinksModal';
+import EditGalleryModal from './components/Modals/EditGalleryModal';
+import EditBannerModal from './components/Modals/EditBannerModal';
 import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
 
@@ -71,16 +73,51 @@ export default function App() {
   const isPreviewMode = new URLSearchParams(window.location.search).get('preview') === 'true';
 
   const [elements, setElements] = useState(() => {
-    const saved = localStorage.getItem('profile_studio_drag_elements_v4') || sessionStorage.getItem('profile_studio_drag_elements_v4');
-    return saved ? JSON.parse(saved) : [];
+    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_drag_elements_v4') || sessionStorage.getItem('profile_studio_preview_data') || sessionStorage.getItem('profile_studio_drag_elements_v4');
+    if (!saved && isPreviewMode && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
+      saved = window.name;
+    }
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.elements ? parsed.elements : (Array.isArray(parsed) ? parsed : []);
+      } catch (e) {}
+    }
+    return [];
   });
 
   const [cardBgColor, setCardBgColor] = useState(() => {
-    return localStorage.getItem('profile_studio_card_bg') || sessionStorage.getItem('profile_studio_card_bg') || '#ffffff';
+    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_card_bg') || sessionStorage.getItem('profile_studio_card_bg');
+    if (!saved && isPreviewMode && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(window.name);
+        if (parsed.cardBgColor) return parsed.cardBgColor;
+      } catch (e) {}
+    }
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.cardBgColor) return parsed.cardBgColor;
+      } catch (e) {}
+    }
+    return saved || '#ffffff';
   });
 
   const [textColor, setTextColor] = useState(() => {
-    return localStorage.getItem('profile_studio_text_color') || sessionStorage.getItem('profile_studio_text_color') || '#191c1e';
+    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_text_color') || sessionStorage.getItem('profile_studio_text_color');
+    if (!saved && isPreviewMode && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(window.name);
+        if (parsed.textColor) return parsed.textColor;
+      } catch (e) {}
+    }
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.textColor) return parsed.textColor;
+      } catch (e) {}
+    }
+    return saved || '#191c1e';
   });
 
   const [editingElement, setEditingElement] = useState(null);
@@ -117,8 +154,18 @@ export default function App() {
     };
 
     setElements((prev) => {
+      // If adding a banner, ALWAYS enforce index 0 and remove any existing banner
+      if (type === 'banner') {
+        const withoutExistingBanner = prev.filter((item) => item.type !== 'banner');
+        return [newElement, ...withoutExistingBanner];
+      }
+
       const updated = [...prev];
-      const targetIdx = index >= 0 && index <= prev.length ? index : prev.length;
+      // If top banner exists at index 0 and adding non-banner, don't allow inserting above index 0 (banner stays at top)
+      let targetIdx = index >= 0 && index <= prev.length ? index : prev.length;
+      if (prev.length > 0 && prev[0]?.type === 'banner' && targetIdx === 0) {
+        targetIdx = 1;
+      }
       updated.splice(targetIdx, 0, newElement);
       return updated;
     });
@@ -151,8 +198,14 @@ export default function App() {
 
   const handleOpenPreviewTab = () => {
     cleanAndRefreshLocalStorage(elements, cardBgColor, textColor);
+    const freshPayload = JSON.stringify({ elements, cardBgColor, textColor });
     const previewUrl = `${window.location.origin}${window.location.pathname}?preview=true`;
-    window.open(previewUrl, '_blank');
+    const newTab = window.open(previewUrl, '_blank');
+    if (newTab) {
+      try {
+        newTab.name = freshPayload;
+      } catch (e) {}
+    }
   };
 
   const handleMobileDragStart = (e, type) => {
@@ -541,6 +594,22 @@ export default function App() {
 
       {editingElement && editingElement.type === 'links' && (
         <EditLinksModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'gallery' && (
+        <EditGalleryModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'banner' && (
+        <EditBannerModal
           element={editingElement}
           onSave={handleSaveElementData}
           onClose={() => setEditingElement(null)}
