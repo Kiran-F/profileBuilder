@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SOCIAL_ICONS } from '../ProfileElements/SocialElement';
 
 const ALL_PLATFORMS = [
   { platform: 'whatsapp', name: 'WhatsApp', placeholder: 'https://wa.me/', color: '#22c55e' },
@@ -62,6 +63,64 @@ export default function EditSocialModal({ element, onSave, onClose }) {
   };
 
   const activeCount = links.filter((l) => l.active).length;
+  const activeLinksForPreview = links.filter((l) => l.active);
+
+  const getPreviewShapeClass = () => {
+    switch (iconShape) {
+      case 'square':
+        return 'rounded-none';
+      case 'rounded':
+        return 'rounded-2xl';
+      case 'circle':
+      default:
+        return 'rounded-full';
+    }
+  };
+
+  const getPreviewSizeClass = () => {
+    switch (iconSize) {
+      case 'small':
+        return 'w-9 h-9 text-xs';
+      case 'large':
+        return 'w-14 h-14 text-base';
+      case 'medium':
+      default:
+        return 'w-12 h-12 text-sm';
+    }
+  };
+
+  const getPreviewIconStyle = (item) => {
+    const brandColor = item.color || '#4648d4';
+    let baseColor = brandColor;
+    if (colorMode === 'black') baseColor = '#0f172a';
+    if (colorMode === 'white') baseColor = '#ffffff';
+
+    if (iconStyle === 'filled') {
+      return {
+        backgroundColor: baseColor,
+        color: colorMode === 'white' ? '#0f172a' : '#ffffff',
+        borderColor: 'transparent'
+      };
+    }
+
+    if (iconStyle === 'unfilled') {
+      return {
+        backgroundColor: 'transparent',
+        color: baseColor,
+        borderColor: baseColor,
+        borderWidth: '2px'
+      };
+    }
+
+    // minimal
+    return {
+      backgroundColor: 'transparent',
+      color: baseColor,
+      borderColor: 'transparent',
+      filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.22))',
+      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.14)'
+    };
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
@@ -205,6 +264,33 @@ export default function EditSocialModal({ element, onSave, onClose }) {
                     ))}
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Real-time Live Social Icons Preview Box */}
+            <div className="border border-indigo-100 rounded-2xl p-4 bg-indigo-50/40 text-center">
+              <span className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider block mb-2.5">
+                Live Social Icons Preview:
+              </span>
+              <div className="flex flex-wrap justify-center items-center gap-3 py-1">
+                {activeLinksForPreview.length > 0 ? (
+                  activeLinksForPreview.map((item) => (
+                    <div
+                      key={item.platform}
+                      style={getPreviewIconStyle(item)}
+                      className={`flex items-center justify-center border shadow-xs transition-all ${getPreviewShapeClass()} ${getPreviewSizeClass()}`}
+                      title={item.name}
+                    >
+                      <div className={`flex items-center justify-center transition-transform duration-200 ${iconStyle === 'minimal' ? 'scale-[1.35]' : ''}`}>
+                        {SOCIAL_ICONS[item.platform] || <span className="material-symbols-outlined text-[20px]">link</span>}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-slate-400 italic py-1">
+                    Toggle a social platform below to preview your icons!
+                  </p>
+                )}
               </div>
             </div>
 

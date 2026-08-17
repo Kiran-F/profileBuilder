@@ -13,25 +13,13 @@ import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
 
 const BG_PRESET_COLORS = [
-  { hex: '#ffffff', name: 'Pure White' },
-  { hex: '#f8fafc', name: 'Slate Light' },
-  { hex: '#fefce8', name: 'Soft Cream' },
-  { hex: '#eef2ff', name: 'Soft Indigo' },
-  { hex: '#ecfdf5', name: 'Soft Emerald' },
-  { hex: '#fff1f2', name: 'Soft Rose' },
-  { hex: '#f3e8ff', name: 'Soft Lavender' },
-  { hex: '#0f172a', name: 'Dark Slate' }
+  { hex: '#ffffff', name: 'White' },
+  { hex: '#000000', name: 'Black' }
 ];
 
 const TEXT_PRESET_COLORS = [
-  { hex: '#191c1e', name: 'Deep Charcoal' },
-  { hex: '#0f172a', name: 'Midnight Slate' },
-  { hex: '#334155', name: 'Slate Gray' },
-  { hex: '#ffffff', name: 'Pure White' },
-  { hex: '#4338ca', name: 'Deep Indigo' },
-  { hex: '#047857', name: 'Deep Emerald' },
-  { hex: '#be123c', name: 'Deep Rose' },
-  { hex: '#6b21a8', name: 'Deep Purple' }
+  { hex: '#ffffff', name: 'White' },
+  { hex: '#000000', name: 'Black' }
 ];
 
 export const cleanAndRefreshLocalStorage = (elements, cardBgColor, textColor) => {
@@ -158,7 +146,7 @@ export default function App() {
     try {
       localStorage.clear();
       sessionStorage.clear();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleOpenPreviewTab = () => {
@@ -282,7 +270,7 @@ export default function App() {
                     </div>
 
                     <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">Presets</span>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       {BG_PRESET_COLORS.map((preset) => (
                         <button
                           key={preset.hex}
@@ -296,7 +284,7 @@ export default function App() {
                         >
                           {cardBgColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${preset.hex === '#0f172a' ? 'text-white' : 'text-indigo-600'
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#000000' ? 'text-white' : 'text-indigo-600'
                                 }`}
                             >
                               check
@@ -327,7 +315,7 @@ export default function App() {
                     </div>
 
                     <span className="text-[10px] font-bold uppercase text-slate-400 block mb-2">Presets</span>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-2">
                       {TEXT_PRESET_COLORS.map((preset) => (
                         <button
                           key={preset.hex}
@@ -341,7 +329,7 @@ export default function App() {
                         >
                           {textColor.toLowerCase() === preset.hex.toLowerCase() && (
                             <span
-                              className={`material-symbols-outlined text-sm ${preset.hex === '#ffffff' ? 'text-slate-900' : 'text-white'
+                              className={`material-symbols-outlined text-sm ${preset.hex === '#000000' ? 'text-white' : 'text-indigo-600'
                                 }`}
                             >
                               check
