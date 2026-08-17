@@ -6,6 +6,7 @@ import BadgesElement from './ProfileElements/BadgesElement';
 import YoutubeElement from './ProfileElements/YoutubeElement';
 import TextElement from './ProfileElements/TextElement';
 import ContactElement from './ProfileElements/ContactElement';
+import LinksElement from './ProfileElements/LinksElement';
 
 export default function Canvas({
   elements,
@@ -45,7 +46,7 @@ export default function Canvas({
     if (e && e.dataTransfer) {
       try {
         const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-profile-block');
-        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact')) {
+        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact' || text === 'links')) {
           return text;
         }
       } catch (err) { }
@@ -69,39 +70,27 @@ export default function Canvas({
     onReorderElements(updated);
   };
 
+  const handleLineDragOver = (e, targetIdx) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDropTargetIndex(targetIdx);
+  };
+
   const handleItemDragOver = (e, index) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = 'copy';
-    }
-    setIsCanvasDragOver(true);
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const offsetY = e.clientY - rect.top;
-    const isBottomHalf = offsetY > rect.height / 2;
-    const targetIdx = isBottomHalf ? index + 1 : index;
-
-    if (dropTargetIndex !== targetIdx) {
-      setDropTargetIndex(targetIdx);
-    }
-  };
-
-  const handleLineDragOver = (e, positionIndex) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = 'copy';
-    }
-    setIsCanvasDragOver(true);
-    if (dropTargetIndex !== positionIndex) {
-      setDropTargetIndex(positionIndex);
+    if (dropTargetIndex !== index) {
+      setDropTargetIndex(index);
     }
   };
 
   const handleCanvasDragLeave = (e) => {
     e.preventDefault();
-    setIsCanvasDragOver(false);
+    e.stopPropagation();
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsCanvasDragOver(false);
+      setDropTargetIndex(null);
+    }
   };
 
   const handleDropAtPosition = (e, targetIdx) => {
@@ -112,7 +101,7 @@ export default function Canvas({
     const sidebarType = getDraggedType(e);
     const insertPosition = targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length);
 
-    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact')) {
+    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact' || sidebarType === 'links')) {
       onAddElementAtIndex(sidebarType, insertPosition);
     }
 
@@ -137,6 +126,8 @@ export default function Canvas({
         return <TextElement data={elem.data} textColor={textColor} />;
       case 'contact':
         return <ContactElement data={elem.data} textColor={textColor} />;
+      case 'links':
+        return <LinksElement data={elem.data} textColor={textColor} />;
       default:
         return null;
     }

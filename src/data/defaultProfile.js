@@ -88,6 +88,21 @@ export const EMPTY_ELEMENT_DATA = {
     isItalic: false,
     isUnderline: false,
     fontFamily: 'Inter'
+  },
+  links: {
+    sectionTitle: '',
+    buttonShape: 'rounded-full',
+    buttonBgColor: '#ffffff',
+    buttonTextColor: '#0f172a',
+    buttonBorderColor: '#000000',
+    borderWidth: 2,
+    hasShadow: true,
+    shadowColor: '#000000',
+    fontSize: 'medium',
+    fontFamily: 'Inter',
+    isBold: true,
+    isItalic: false,
+    items: []
   }
 };
 

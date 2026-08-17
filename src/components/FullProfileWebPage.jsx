@@ -6,6 +6,7 @@ import BadgesElement from './ProfileElements/BadgesElement';
 import YoutubeElement from './ProfileElements/YoutubeElement';
 import TextElement from './ProfileElements/TextElement';
 import ContactElement from './ProfileElements/ContactElement';
+import LinksElement from './ProfileElements/LinksElement';
 
 export default function FullProfileWebPage({ initialElements, initialCardBgColor, initialTextColor }) {
   const [elements, setElements] = useState(initialElements || []);
@@ -61,6 +62,8 @@ export default function FullProfileWebPage({ initialElements, initialCardBgColor
         return <TextElement data={elem.data} textColor={textColor} />;
       case 'contact':
         return <ContactElement data={elem.data} textColor={textColor} />;
+      case 'links':
+        return <LinksElement data={elem.data} textColor={textColor} />;
       default:
         return null;
     }

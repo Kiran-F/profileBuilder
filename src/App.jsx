@@ -8,6 +8,7 @@ import EditBadgesModal from './components/Modals/EditBadgesModal';
 import EditYoutubeModal from './components/Modals/EditYoutubeModal';
 import EditTextModal from './components/Modals/EditTextModal';
 import EditContactModal from './components/Modals/EditContactModal';
+import EditLinksModal from './components/Modals/EditLinksModal';
 import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA } from './data/defaultProfile';
 
@@ -544,6 +545,14 @@ export default function App() {
 
       {editingElement && editingElement.type === 'contact' && (
         <EditContactModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && editingElement.type === 'links' && (
+        <EditLinksModal
           element={editingElement}
           onSave={handleSaveElementData}
           onClose={() => setEditingElement(null)}

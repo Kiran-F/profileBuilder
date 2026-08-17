@@ -24,7 +24,8 @@ export default function Sidebar() {
     { key: 'badges', label: 'Badges', icon: 'workspace_premium', desc: 'Square Badges & Credentials' },
     { key: 'youtube', label: 'YouTube Video', icon: 'play_circle', desc: 'Embed YouTube Video' },
     { key: 'text', label: 'Text Block', icon: 'text_fields', desc: 'Custom Heading & Text' },
-    { key: 'contact', label: 'Contact Info', icon: 'contacts', desc: 'Email, Phone, Web & Location' }
+    { key: 'contact', label: 'Contact Info', icon: 'contacts', desc: 'Email, Phone, Web & Location' },
+    { key: 'links', label: 'Links', icon: 'add_link', desc: 'Custom Button Links' }
   ];
 
   return (
