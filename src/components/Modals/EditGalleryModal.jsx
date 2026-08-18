@@ -42,6 +42,7 @@ const PRESET_COLORS = [
 export default function EditGalleryModal({ element, onSave, onClose }) {
   const [sectionTitle, setSectionTitle] = useState(element.data.sectionTitle !== undefined ? element.data.sectionTitle : '');
   const [layoutStyle, setLayoutStyle] = useState(element.data.layoutStyle || 'grid');
+  const [gridCols, setGridCols] = useState(element.data.gridCols || 2);
   const [imageAspect, setImageAspect] = useState(element.data.imageAspect || 'landscape');
   const [imageRadius, setImageRadius] = useState(element.data.imageRadius || 'rounded-2xl');
   const [hasShadow, setHasShadow] = useState(element.data.hasShadow !== undefined ? element.data.hasShadow : true);
@@ -105,6 +106,7 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
       ...element.data,
       sectionTitle,
       layoutStyle,
+      gridCols,
       imageAspect,
       imageRadius,
       hasShadow,
@@ -133,12 +135,24 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
       case 'square':
         return 'aspect-square object-cover';
       case 'portrait':
-        return 'aspect-[3/4] object-cover';
+        return 'aspect-[3/4] object-cover object-top';
       case 'natural':
         return 'h-32 object-contain';
       case 'landscape':
       default:
-        return 'aspect-[4/3] object-cover';
+        return 'aspect-[16/9] object-cover';
+    }
+  };
+
+  const getPreviewCardWidthClass = () => {
+    switch (imageAspect) {
+      case 'portrait':
+        return 'w-44 sm:w-48 mx-auto';
+      case 'square':
+        return 'w-48 sm:w-52 mx-auto';
+      case 'landscape':
+      default:
+        return 'w-full max-w-xs mx-auto';
     }
   };
 
@@ -197,18 +211,17 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
               <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                 Layout Style
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {[
-                  { id: 'grid', label: 'Grid (2 Cols)', desc: 'Side-by-side cards' },
-                  { id: 'scroll', label: 'Scroll Carousel', desc: 'Horizontal swipe' },
-                  { id: 'stacked', label: 'Stacked Rows', desc: 'Vertical full width' }
+                  { id: 'grid', label: 'Grid Layout', desc: 'Custom 1-4 columns' },
+                  { id: 'scroll', label: 'Scroll Carousel', desc: 'Horizontal swipe' }
                 ].map((st) => (
                   <button
                     key={st.id}
                     type="button"
                     onClick={() => setLayoutStyle(st.id)}
                     className={`py-2 px-2 text-xs font-bold rounded-xl border transition-all cursor-pointer text-center ${
-                      layoutStyle === st.id
+                      (layoutStyle === st.id || (st.id === 'grid' && layoutStyle === 'stacked'))
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                     }`}
@@ -218,6 +231,39 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                 ))}
               </div>
             </div>
+
+            {/* Grid Columns Option (Visible when layoutStyle === 'grid' or 'stacked') */}
+            {(layoutStyle === 'grid' || layoutStyle === 'stacked') && (
+              <div className="animate-fadeIn">
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                  Grid Columns Count
+                </label>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[
+                    { cols: 1, label: '1 Col' },
+                    { cols: 2, label: '2 Cols' },
+                    { cols: 3, label: '3 Cols' },
+                    { cols: 4, label: '4 Cols' }
+                  ].map((c) => (
+                    <button
+                      key={c.cols}
+                      type="button"
+                      onClick={() => {
+                        setLayoutStyle('grid');
+                        setGridCols(c.cols);
+                      }}
+                      className={`py-1.5 text-xs font-bold rounded-xl border transition-all cursor-pointer text-center ${
+                        gridCols === c.cols
+                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {c.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Image Aspect Ratio & Corner Radius */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -236,11 +282,10 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                       key={asp.id}
                       type="button"
                       onClick={() => setImageAspect(asp.id)}
-                      className={`py-1.5 text-[10px] sm:text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        imageAspect === asp.id
+                      className={`py-1.5 text-[10px] sm:text-xs font-bold rounded-lg border transition-all cursor-pointer ${imageAspect === asp.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {asp.label.split(' ')[0]}
                     </button>
@@ -263,11 +308,10 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                       key={rad.id}
                       type="button"
                       onClick={() => setImageRadius(rad.id)}
-                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
-                        imageRadius === rad.id
+                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${imageRadius === rad.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {rad.label}
                     </button>
@@ -315,9 +359,8 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                       type="button"
                       onClick={() => setFontColor(c.hex)}
                       style={{ backgroundColor: c.hex }}
-                      className={`w-5 h-5 rounded-full border border-slate-300 transition-all cursor-pointer ${
-                        fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
-                      }`}
+                      className={`w-5 h-5 rounded-full border border-slate-300 transition-all cursor-pointer ${fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
+                        }`}
                       title={c.name}
                     ></button>
                   ))}
@@ -350,11 +393,10 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                       key={size.id}
                       type="button"
                       onClick={() => setFontSize(size.id)}
-                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        fontSize === size.id
+                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${fontSize === size.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {size.label}
                     </button>
@@ -370,11 +412,10 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsBold(!isBold)}
-                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                      isBold
+                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${isBold
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     B (Bold)
                   </button>
@@ -382,11 +423,10 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsItalic(!isItalic)}
-                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${
-                      isItalic
+                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${isItalic
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     I (Italic)
                   </button>
@@ -413,7 +453,7 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                       <span className="material-symbols-outlined text-base">chevron_left</span>
                     </button>
                   )}
-                  <div className={`w-full max-w-xs bg-white border border-slate-200 overflow-hidden shadow-md ${imageRadius}`}>
+                  <div className={`bg-white border border-slate-200 overflow-hidden shadow-md ${getPreviewCardWidthClass()} ${imageRadius}`}>
                     {(items[previewIndex] || items[0])?.image ? (
                       <img
                         src={(items[previewIndex] || items[0]).image}

@@ -45,6 +45,7 @@ export default function GalleryElement({ data, textColor }) {
     sectionTitle = '',
     items = [],
     layoutStyle = 'grid',
+    gridCols = 2,
     imageAspect = 'landscape',
     imageRadius = 'rounded-2xl',
     hasShadow = true,
@@ -99,17 +100,33 @@ export default function GalleryElement({ data, textColor }) {
     };
   };
 
+  // Image Aspect Ratio Classes:
+  // Portrait (4:5 ratio): Height > Width (Height is 1.33x Width)
   const getAspectClass = () => {
     switch (imageAspect) {
       case 'square':
         return 'aspect-square object-cover';
       case 'portrait':
-        return 'aspect-[3/4] object-cover';
+        return 'aspect-[4/5] object-cover object-top';
       case 'natural':
-        return 'h-auto object-contain';
+        return 'h-auto max-h-[300px] object-contain';
       case 'landscape':
       default:
-        return 'aspect-[4/3] object-cover';
+        return 'aspect-[16/9] object-cover';
+    }
+  };
+
+  // Card Width Wrapper based on Aspect Mode:
+  // For Portrait: Limit width to 210px-240px so Height (280px-320px) is strictly GREATER than Width!
+  const getCardWidthClass = () => {
+    switch (imageAspect) {
+      case 'portrait':
+        return 'w-[250px] sm:w-[290px] mx-auto';
+      case 'square':
+        return 'w-[220px] sm:w-[260px] mx-auto';
+      case 'landscape':
+      default:
+        return 'w-full max-w-md mx-auto';
     }
   };
 
@@ -131,13 +148,13 @@ export default function GalleryElement({ data, textColor }) {
         </div>
       ) : (
         <div className={`w-full bg-slate-100 flex items-center justify-center text-slate-300 ${getAspectClass()}`}>
-          <span className="material-symbols-outlined text-4xl">image</span>
+          <span className="material-symbols-outlined text-3xl">image</span>
         </div>
       )}
 
       {/* Optional Label / Caption Heading */}
       {item.title && (
-        <div className="p-3.5 text-center bg-white">
+        <div className="p-2.5 sm:p-3 text-center bg-white">
           <h5 className={`leading-snug truncate ${getFontSizeClass()}`} style={getCustomTextStyle()}>
             {item.title}
           </h5>
@@ -172,42 +189,56 @@ export default function GalleryElement({ data, textColor }) {
     );
   };
 
+  const getGridColsClass = () => {
+    switch (gridCols) {
+      case 1:
+        return 'grid-cols-1 max-w-md';
+      case 3:
+        return 'grid-cols-2 sm:grid-cols-3 max-w-xl';
+      case 4:
+        return 'grid-cols-2 sm:grid-cols-4 max-w-2xl';
+      case 2:
+      default:
+        return 'grid-cols-2 max-w-lg';
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col items-center py-3 px-1">
+    <div className="w-full flex flex-col items-center py-2 px-1">
       {/* Optional Section Heading */}
       {sectionTitle && (
         <h4
-          className="text-xs sm:text-sm font-bold tracking-wider uppercase mb-3.5 text-center opacity-80"
+          className="text-xs sm:text-sm font-bold tracking-wider uppercase mb-3 text-center opacity-80"
           style={{ color: textColor }}
         >
           {sectionTitle}
         </h4>
       )}
 
-      {/* Grid Layout */}
-      {layoutStyle === 'grid' && (
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 max-w-xl">
+      {/* Grid Layout (Supports 1, 2, 3, or 4 columns) */}
+      {(layoutStyle === 'grid' || layoutStyle === 'stacked') && (
+        <div className={`w-full grid gap-3 sm:gap-4 ${getGridColsClass()}`}>
           {validItems.map((item) => renderImageCard(item))}
         </div>
       )}
 
-      {/* Carousel Layout with Left & Right Arrows (Clean Single Certificate Display) */}
+      {/* Carousel Layout with Left & Right Arrows */}
       {layoutStyle === 'scroll' && (
-        <div className="w-full flex flex-col items-center max-w-xl">
-          <div className="w-full flex items-center justify-between gap-2.5 sm:gap-3.5 relative">
+        <div className={`w-full flex flex-col items-center ${getCardWidthClass()}`}>
+          <div className="w-full flex items-center justify-between gap-2 sm:gap-3 relative">
             {/* Left Arrow Button */}
             {validItems.length > 1 && (
               <button
                 type="button"
                 onClick={handlePrev}
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 hover:bg-white border border-slate-200 shadow-md text-slate-700 hover:text-indigo-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer flex-shrink-0 z-10"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/95 hover:bg-white border border-slate-200 shadow-md text-slate-700 hover:text-indigo-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer flex-shrink-0 z-10 -ml-3 sm:-ml-4"
                 title="Previous Image"
               >
-                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
+                <span className="material-symbols-outlined text-base sm:text-lg">chevron_left</span>
               </button>
             )}
 
-            {/* Main Active Clean Card */}
+            {/* Main Active Compact Card */}
             <div className="flex-1 min-w-0 transition-all duration-300">
               {renderImageCard(validItems[activeIndex] || validItems[0])}
             </div>
@@ -217,17 +248,17 @@ export default function GalleryElement({ data, textColor }) {
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 hover:bg-white border border-slate-200 shadow-md text-slate-700 hover:text-indigo-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer flex-shrink-0 z-10"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/95 hover:bg-white border border-slate-200 shadow-md text-slate-700 hover:text-indigo-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer flex-shrink-0 z-10 -mr-3 sm:-mr-4"
                 title="Next Image"
               >
-                <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
+                <span className="material-symbols-outlined text-base sm:text-lg">chevron_right</span>
               </button>
             )}
           </div>
 
           {/* Pagination Indicators / Dots */}
           {validItems.length > 1 && (
-            <div className="flex items-center justify-center gap-1.5 mt-3.5">
+            <div className="flex items-center justify-center gap-1.5 mt-3">
               {validItems.map((item, idx) => (
                 <button
                   key={item.id}
@@ -235,7 +266,7 @@ export default function GalleryElement({ data, textColor }) {
                   onClick={() => setActiveIndex(idx)}
                   className={`h-2 rounded-full transition-all cursor-pointer ${
                     activeIndex === idx
-                      ? 'w-6 bg-indigo-600'
+                      ? 'w-5 bg-indigo-600'
                       : 'w-2 bg-slate-300 hover:bg-slate-400'
                   }`}
                   title={`Go to slide ${idx + 1}`}
@@ -243,13 +274,6 @@ export default function GalleryElement({ data, textColor }) {
               ))}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Stacked Vertical Rows Layout */}
-      {layoutStyle === 'stacked' && (
-        <div className="w-full flex flex-col gap-4 max-w-xl">
-          {validItems.map((item) => renderImageCard(item))}
         </div>
       )}
     </div>

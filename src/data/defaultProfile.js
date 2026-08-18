@@ -107,6 +107,7 @@ export const EMPTY_ELEMENT_DATA = {
   gallery: {
     sectionTitle: '',
     layoutStyle: 'grid',
+    gridCols: 2, // 1, 2, 3, or 4 columns
     imageAspect: 'landscape',
     imageRadius: 'rounded-2xl',
     hasShadow: true,
