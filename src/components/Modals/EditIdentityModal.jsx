@@ -57,6 +57,7 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
   const [designation, setDesignation] = useState(element.data.designation || '');
   const [department, setDepartment] = useState(element.data.department || '');
   const [companyName, setCompanyName] = useState(element.data.companyName || '');
+  const [alignment, setAlignment] = useState(element.data.alignment || 'left'); // 'left', 'center', 'right'
 
   const [fontSize, setFontSize] = useState(element.data.fontSize || 'medium');
   const [fontColor, setFontColor] = useState(element.data.fontColor || '');
@@ -77,7 +78,7 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
   const [cropImageSource, setCropImageSource] = useState('');
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -128,6 +129,7 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
       designation: designation.trim(),
       department: department.trim(),
       companyName: companyName.trim(),
+      alignment,
       fontSize,
       fontColor,
       isBold,
@@ -169,20 +171,44 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
     }
   };
 
+  const getPreviewAlignmentConfig = () => {
+    switch (alignment) {
+      case 'center':
+        return {
+          wrapper: 'items-center text-center px-4',
+          avatarRow: 'justify-center',
+          textRow: 'items-center text-center'
+        };
+      case 'right':
+        return {
+          wrapper: 'items-end text-right px-6',
+          avatarRow: 'justify-end',
+          textRow: 'items-end text-right'
+        };
+      case 'left':
+      default:
+        return {
+          wrapper: 'items-start text-left px-6',
+          avatarRow: 'justify-start',
+          textRow: 'items-start text-left'
+        };
+    }
+  };
+
   const fullName = [firstName, lastName].filter(Boolean).join(' ') || name || 'John Doe';
   const titleText = [jobTitle, designation].filter(Boolean).join(' • ') || 'Software Engineer';
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+      <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden flex flex-col max-h-[92vh] my-auto">
           {/* Modal Header */}
           <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-indigo-600 text-2xl p-2 bg-indigo-50 rounded-xl">person</span>
               <div>
-                <h2 className="text-base font-bold text-slate-900 leading-tight">Edit Identity & Typography</h2>
-                <p className="text-xs text-slate-500">Update photo, name, work info & font styles</p>
+                <h2 className="text-base font-bold text-slate-900 leading-tight">Edit Identity & Alignment</h2>
+                <p className="text-xs text-slate-500">Update photo, name, work info, alignment & font styles</p>
               </div>
             </div>
             <button
@@ -196,171 +222,186 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
 
           {/* Modal Body */}
           <form onSubmit={handleFormSubmit} className="p-5 overflow-y-auto flex-1 space-y-4">
-            {/* Avatar Upload / Selector & Shape Editor */}
-            <div>
-              <div className="mb-2">
-                <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                  Profile Photo & Shape
-                </label>
+            {/* NEW: Identity Alignment Selector (Left, Center, Right) */}
+            <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-2 bg-indigo-50/30">
+              <span className="text-xs font-bold text-slate-800 block uppercase tracking-wide">
+                Identity Element Alignment (Banner Overlap)
+              </span>
+              <p className="text-[11px] text-slate-500">
+                Choose where to align your profile photo (half-overlapping top banner) and text:
+              </p>
+              <div className="grid grid-cols-3 gap-2 pt-1">
+                {[
+                  { id: 'left', label: 'Left', icon: 'align_horizontal_left' },
+                  { id: 'center', label: 'Center', icon: 'align_horizontal_center' },
+                  { id: 'right', label: 'Right', icon: 'align_horizontal_right' }
+                ].map((pos) => (
+                  <button
+                    key={pos.id}
+                    type="button"
+                    onClick={() => setAlignment(pos.id)}
+                    className={`py-2 px-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex flex-col items-center gap-1 ${alignment === pos.id
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                  >
+                    <span className="material-symbols-outlined text-lg">{pos.icon}</span>
+                    {pos.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
+            {/* Avatar Upload / Selector & Shape Editor */}
+            <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-3 bg-slate-50/40">
+              <span className="text-xs font-bold text-slate-800 block uppercase tracking-wide">
+                Profile Photo & Shape
+              </span>
+
+              {/* Current Avatar & Actions */}
               <div className="flex items-center gap-3">
-                <div className="relative group w-16 h-16 rounded-2xl overflow-hidden border-2 border-indigo-500 shadow-xs bg-slate-100 flex-shrink-0 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-slate-200 overflow-hidden flex-shrink-0 border border-slate-300 shadow-2xs">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
+                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="material-symbols-outlined text-3xl text-slate-400 m-auto">person</span>
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                      <span className="material-symbols-outlined text-2xl">person</span>
+                    </div>
                   )}
                 </div>
 
-                <div className="flex-1 flex flex-col gap-2">
-                  <input
-                    type="text"
-                    placeholder="Paste Image URL..."
-                    value={avatarUrl}
-                    onChange={(e) => {
-                      setAvatarUrl(e.target.value);
-                      setRawAvatarUrl(e.target.value);
-                    }}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
-                  />
+                <div className="flex-1 flex items-center gap-2 flex-wrap">
+                  <label className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl cursor-pointer shadow-2xs transition-colors">
+                    Upload Photo
+                    <input type="file" accept="image/*" onChange={handleFileUpload} className="sr-only" />
+                  </label>
 
-                  <div className="flex items-center gap-2">
-                    <label className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl cursor-pointer transition-colors">
-                      <span className="material-symbols-outlined text-sm">upload</span>
-                      Upload Local Photo
-                      <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-                    </label>
-
-                    {avatarUrl && (
-                      <button
-                        type="button"
-                        onClick={() => handleOpenCropModal(rawAvatarUrl || avatarUrl)}
-                        className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer flex items-center gap-1"
-                      >
-                        <span className="material-symbols-outlined text-sm">crop</span>
-                        Crop / Shape
-                      </button>
-                    )}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenCropModal()}
+                    disabled={!avatarUrl && !rawAvatarUrl}
+                    className="px-3 py-1.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-base">crop</span>
+                    Adjust Photo & Crop
+                  </button>
                 </div>
               </div>
 
-              {/* Presets */}
-              <div className="mt-2.5">
-                <span className="text-[11px] text-slate-400 block mb-1">Or choose a preset avatar:</span>
-                <div className="flex gap-2">
+              {/* Preset Avatar Selection */}
+              <div>
+                <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">
+                  Or Pick a Preset Avatar:
+                </span>
+                <div className="flex items-center gap-2">
                   {PRESET_AVATARS.map((url, idx) => (
-                    <img
+                    <button
                       key={idx}
-                      src={url}
-                      alt={`Preset ${idx + 1}`}
+                      type="button"
                       onClick={() => {
                         setAvatarUrl(url);
                         setRawAvatarUrl(url);
-                        handleOpenCropModal(url);
                       }}
-                      className={`w-8 h-8 rounded-full object-cover cursor-pointer border-2 transition-all hover:scale-110 ${
-                        avatarUrl === url ? 'border-indigo-600 ring-2 ring-indigo-500/30' : 'border-transparent opacity-70 hover:opacity-100'
-                      }`}
-                    />
+                      className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-all cursor-pointer ${avatarUrl === url ? 'border-indigo-600 scale-110 shadow-xs' : 'border-transparent opacity-80 hover:opacity-100'
+                        }`}
+                    >
+                      <img src={url} alt={`Preset ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* First Name & Last Name */}
+            {/* Name Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                   First Name
-                </legend>
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Kiran"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
 
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                   Last Name
-                </legend>
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. Doe"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Fatima"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
             </div>
 
-            {/* Job Title & Designation */}
+            {/* Work Info Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
-                  Job Title
-                </legend>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                  Job Title / Headline
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. Software Engineer"
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Software Engineer"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
 
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
-                  Designation
-                </legend>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                  Designation / Role
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. Lead Developer"
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Senior Tech Lead"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
             </div>
 
-            {/* Department & Company Name */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                   Department
-                </legend>
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. Engineering & IT"
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Engineering & IT"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
 
-              <fieldset className="border border-slate-200 rounded-xl px-3.5 pt-1.5 pb-2 hover:border-indigo-400 focus-within:border-indigo-600 focus-within:ring-2 focus-within:ring-indigo-500/10 transition-all bg-white">
-                <legend className="text-[11px] font-semibold text-slate-500 px-1 bg-white">
-                  Company Name
-                </legend>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                  Company / Institution Name
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. Acme Tech Solutions"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-800 focus:outline-none"
+                  placeholder="e.g. Google / GDG Pakistan"
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-500"
                 />
-              </fieldset>
+              </div>
             </div>
 
-            {/* Typography Controls Panel */}
-            <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-3.5 bg-slate-50/40">
-              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
-                <span className="material-symbols-outlined text-base text-indigo-600">text_format</span>
-                Identity Font & Style Controls
+            {/* Typography Controls */}
+            <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-3 bg-slate-50/40">
+              <span className="text-xs font-bold text-slate-800 block uppercase tracking-wide">
+                Typography Controls
               </span>
 
               {/* Font Family Dropdown */}
@@ -399,11 +440,10 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                         key={size.id}
                         type="button"
                         onClick={() => setFontSize(size.id)}
-                        className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                          fontSize === size.id
+                        className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${fontSize === size.id
                             ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                        }`}
+                          }`}
                       >
                         {size.label}
                       </button>
@@ -420,11 +460,10 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                     <button
                       type="button"
                       onClick={() => setIsBold(!isBold)}
-                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        isBold
+                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${isBold
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                       title="Bold"
                     >
                       B
@@ -433,11 +472,10 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                     <button
                       type="button"
                       onClick={() => setIsItalic(!isItalic)}
-                      className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${
-                        isItalic
+                      className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${isItalic
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                       title="Italic"
                     >
                       I
@@ -446,11 +484,10 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                     <button
                       type="button"
                       onClick={() => setIsUnderline(!isUnderline)}
-                      className={`py-1.5 text-xs font-bold underline rounded-lg border transition-all cursor-pointer ${
-                        isUnderline
+                      className={`py-1.5 text-xs font-bold underline rounded-lg border transition-all cursor-pointer ${isUnderline
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                       title="Underline"
                     >
                       U
@@ -471,9 +508,8 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                       type="button"
                       onClick={() => setFontColor(c.hex)}
                       style={{ backgroundColor: c.hex || '#94a3b8' }}
-                      className={`w-6 h-6 rounded-full border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
-                        fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
-                      }`}
+                      className={`w-6 h-6 rounded-full border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
+                        }`}
                       title={c.name}
                     >
                       {!c.hex && <span className="material-symbols-outlined text-xs text-white">do_not_disturb_alt</span>}
@@ -492,15 +528,31 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
               </div>
             </div>
 
-            {/* Real-time Live Identity Text Preview Box */}
-            <div className="border border-indigo-100 rounded-2xl p-3.5 bg-indigo-50/40 text-center">
-              <span className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider block mb-1">
-                Live Text Preview:
+            {/* Real-time Live Identity Text & Alignment Preview Box */}
+            <div className="border border-indigo-100 rounded-2xl p-4 bg-indigo-50/40 text-center">
+              <span className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider block mb-2">
+                Live Alignment & Text Preview:
               </span>
-              <div style={getPreviewStyle()} className={`transition-all ${getFontSizeClass()}`}>
-                <h3 className="font-bold tracking-tight mb-0.5">{fullName}</h3>
-                <p className="text-xs opacity-90">{titleText}</p>
-                {companyName && <p className="text-[11px] opacity-75">{companyName}</p>}
+              <div className="w-full max-w-sm mx-auto bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs pb-3">
+                <div className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-2xl" />
+                <div className={`w-full flex flex-col ${getPreviewAlignmentConfig().wrapper}`}>
+                  <div className={`w-full flex ${getPreviewAlignmentConfig().avatarRow}`}>
+                    <div className="-mt-6 relative z-10 w-12 h-12 rounded-full border-2 border-white bg-slate-200 overflow-hidden shadow-xs">
+                      {avatarUrl ? (
+                        <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-400">
+                          <span className="material-symbols-outlined text-xl">person</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div style={getPreviewStyle()} className={`mt-1.5 w-full flex flex-col ${getPreviewAlignmentConfig().textRow} ${getFontSizeClass()}`}>
+                    <h3 className="font-bold tracking-tight mb-0.5">{fullName}</h3>
+                    <p className="text-xs opacity-90">{titleText}</p>
+                    {companyName && <p className="text-[11px] opacity-75">{companyName}</p>}
+                  </div>
+                </div>
               </div>
             </div>
 

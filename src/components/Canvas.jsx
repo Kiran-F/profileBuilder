@@ -9,10 +9,15 @@ import ContactElement from './ProfileElements/ContactElement';
 import LinksElement from './ProfileElements/LinksElement';
 import GalleryElement from './ProfileElements/GalleryElement';
 import BannerElement from './ProfileElements/BannerElement';
+import { computeProfileBackgroundStyle } from '../utils/backgroundStyles';
 
 export default function Canvas({
   elements,
   cardBgColor = '#ffffff',
+  cardBgType = 'solid',
+  cardBgGradient = 'sunset-fire',
+  customGradientStart = '#ff416c',
+  customGradientEnd = '#ff4b2b',
   textColor = '#191c1e',
   onReorderElements,
   onAddElementAtIndex,
@@ -56,10 +61,12 @@ export default function Canvas({
     return null;
   };
 
+  const bannerExists = elements.some((e) => e.type === 'banner');
+  const identityExists = elements.some((e) => e.type === 'identity');
+  const fixedCount = (bannerExists ? 1 : 0) + (identityExists ? 1 : 0);
+
   const handleMoveUp = (index) => {
-    if (index <= 0) return;
-    // Don't allow moving an element above the top banner at index 0
-    if (index === 1 && elements[0]?.type === 'banner') return;
+    if (index <= fixedCount) return;
 
     const updated = [...elements];
     const [item] = updated.splice(index, 1);
@@ -68,9 +75,7 @@ export default function Canvas({
   };
 
   const handleMoveDown = (index) => {
-    if (index >= elements.length - 1) return;
-    // Don't allow moving top banner downwards if user wants it fixed at top
-    if (index === 0 && elements[0]?.type === 'banner') return;
+    if (index < fixedCount || index >= elements.length - 1) return;
 
     const updated = [...elements];
     const [item] = updated.splice(index, 1);
@@ -119,12 +124,12 @@ export default function Canvas({
     window.__draggedSource = null;
   };
 
-  const renderElementBody = (elem) => {
+  const renderElementBody = (elem, index) => {
     switch (elem.type) {
       case 'banner':
         return <BannerElement data={elem.data} />;
       case 'identity':
-        return <IdentityElement data={elem.data} textColor={textColor} />;
+        return <IdentityElement data={elem.data} textColor={textColor} hasBannerAbove={index > 0 && elements[index - 1]?.type === 'banner'} />;
       case 'bio':
         return <BioElement data={elem.data} textColor={textColor} />;
       case 'social':
@@ -146,6 +151,14 @@ export default function Canvas({
     }
   };
 
+  const profileBgStyle = computeProfileBackgroundStyle({
+    bgType: cardBgType,
+    bgColor: cardBgColor,
+    bgGradient: cardBgGradient,
+    customGradientStart,
+    customGradientEnd
+  });
+
   return (
     <main
       onDragOver={(e) => handleLineDragOver(e, elements.length)}
@@ -160,7 +173,7 @@ export default function Canvas({
     >
       {/* Central Profile Card Container */}
       <div
-        style={{ backgroundColor: cardBgColor, color: textColor }}
+        style={{ ...profileBgStyle, color: textColor }}
         onDragOver={(e) => handleLineDragOver(e, elements.length)}
         onDragLeave={handleCanvasDragLeave}
         onDrop={(e) => handleDropAtPosition(e, elements.length)}
@@ -225,47 +238,57 @@ export default function Canvas({
                 onDrop={(e) => handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : index)}
                 className="relative w-full group element-wrapper p-3 sm:p-4 pt-6 sm:pt-7 rounded-xl transition-all border border-slate-200/80 hover:border-indigo-400 bg-white/10 my-1.5 cursor-default"
               >
-                {/* 1. LEFT TYPE BADGE */}
+                {/* 1. LEFT TYPE BADGE (GLASSMORPHIC) */}
                 <div
-                  className="element-controls absolute top-1.5 left-1.5 md:top-2 md:left-2 flex items-center gap-1 md:gap-1.5 z-10 opacity-100"
+                  className="element-controls absolute top-1.5 left-1.5 md:top-2 md:left-2 flex items-center gap-1.5 z-30 bg-white/60 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/70 shadow-xs opacity-100 transition-all"
                 >
-                  <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-indigo-500"></span>
-                  <span className="text-[9px] md:text-[10px] font-mono font-semibold uppercase text-slate-500">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                  <span className="text-[8px] md:text-[9.5px] font-mono font-bold uppercase tracking-wider text-slate-800">
                     {elem.type}
                   </span>
                 </div>
 
-                {/* 2. RIGHT CONTROLS TOOLBAR (MOVE UP, MOVE DOWN, EDIT, DELETE) */}
-                <div className="element-controls absolute top-1.5 right-1.5 md:top-2 md:right-2 flex items-center gap-0.5 md:gap-1 z-10 bg-white/95 backdrop-blur-xs p-0.5 md:p-1 rounded-md md:rounded-lg border border-slate-200 shadow-2xs opacity-100">
-                  {/* Move Up Button */}
-                  <button
-                    type="button"
-                    disabled={index === 0}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleMoveUp(index);
-                    }}
-                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
-                    title="Move up"
-                  >
-                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">arrow_upward</span>
-                  </button>
+                {/* 2. RIGHT CONTROLS TOOLBAR (GLASSMORPHIC & COMPACT ICONS) */}
+                <div className="element-controls absolute top-1.5 right-1.5 md:top-2 md:right-2 flex items-center gap-0.5 z-30 bg-white/65 backdrop-blur-md p-0.5 sm:p-1 rounded-lg border border-white/80 shadow-xs opacity-100 transition-all hover:bg-white/80">
+                  {/* Fixed position badge for Banner & Identity elements */}
+                  {(elem.type === 'banner' || elem.type === 'identity') ? (
+                    <div className="flex items-center gap-0.5 px-1 py-0.5 text-[9px] md:text-[10px] font-semibold text-indigo-600 bg-indigo-50/80 rounded-md border border-indigo-100" title="Fixed position at top of profile">
+                      <span className="material-symbols-outlined text-[10px] md:text-[11px]">push_pin</span>
+                      <span>Fixed</span>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Move Up Button */}
+                      <button
+                        type="button"
+                        disabled={index <= fixedCount}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMoveUp(index);
+                        }}
+                        className="element-control-btn p-0.5 sm:p-1 rounded-md text-slate-700 hover:text-indigo-600 hover:bg-white/90 disabled:opacity-20 disabled:pointer-events-none transition-all cursor-pointer"
+                        title="Move up"
+                      >
+                        <span className="material-symbols-outlined text-[11px] sm:text-[13px] block">arrow_upward</span>
+                      </button>
 
-                  {/* Move Down Button */}
-                  <button
-                    type="button"
-                    disabled={index === elements.length - 1}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleMoveDown(index);
-                    }}
-                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 disabled:opacity-20 disabled:pointer-events-none transition-colors cursor-pointer"
-                    title="Move down"
-                  >
-                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">arrow_downward</span>
-                  </button>
+                      {/* Move Down Button */}
+                      <button
+                        type="button"
+                        disabled={index === elements.length - 1}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMoveDown(index);
+                        }}
+                        className="element-control-btn p-0.5 sm:p-1 rounded-md text-slate-700 hover:text-indigo-600 hover:bg-white/90 disabled:opacity-20 disabled:pointer-events-none transition-all cursor-pointer"
+                        title="Move down"
+                      >
+                        <span className="material-symbols-outlined text-[11px] sm:text-[13px] block">arrow_downward</span>
+                      </button>
+                    </>
+                  )}
 
-                  <div className="w-[1px] h-3 md:h-4 bg-slate-200 mx-0.5"></div>
+                  <div className="w-[1px] h-3 bg-slate-300/80 mx-0.5"></div>
 
                   {/* Edit Button */}
                   <button
@@ -274,10 +297,10 @@ export default function Canvas({
                       e.stopPropagation();
                       onEditElement(elem);
                     }}
-                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 sm:p-1 rounded-md text-slate-700 hover:text-indigo-600 hover:bg-white/90 transition-all cursor-pointer"
                     title="Edit element"
                   >
-                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">edit</span>
+                    <span className="material-symbols-outlined text-[11px] sm:text-[13px] block">edit</span>
                   </button>
 
                   {/* Delete Button */}
@@ -287,15 +310,15 @@ export default function Canvas({
                       e.stopPropagation();
                       onDeleteElement(elem.id);
                     }}
-                    className="element-control-btn p-0.5 md:p-1 rounded-sm md:rounded-md text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                    className="element-control-btn p-0.5 sm:p-1 rounded-md text-slate-700 hover:text-red-600 hover:bg-red-50/80 transition-all cursor-pointer"
                     title="Delete element"
                   >
-                    <span className="material-symbols-outlined text-[11px] md:text-[16px]">delete</span>
+                    <span className="material-symbols-outlined text-[11px] sm:text-[13px] block">delete</span>
                   </button>
                 </div>
 
                 {/* Element Content */}
-                <div className="w-full pt-2">{renderElementBody(elem)}</div>
+                <div className="w-full pt-2">{renderElementBody(elem, index)}</div>
               </div>
             </React.Fragment>
           );

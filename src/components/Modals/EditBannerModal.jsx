@@ -56,6 +56,7 @@ export default function EditBannerModal({ element, onSave, onClose }) {
   const [bgColor, setBgColor] = useState(element.data.bgColor || '#4648d4');
   const [bannerHeight, setBannerHeight] = useState(element.data.bannerHeight || 'medium');
   const [bannerRadius, setBannerRadius] = useState(element.data.bannerRadius || 'rounded-2xl');
+  const [fullWidth, setFullWidth] = useState(element.data.fullWidth || false);
   const [title, setTitle] = useState(element.data.title !== undefined ? element.data.title : '');
   const [fontSize, setFontSize] = useState(element.data.fontSize || 'medium');
   const [fontFamily, setFontFamily] = useState(element.data.fontFamily || 'Inter');
@@ -90,6 +91,7 @@ export default function EditBannerModal({ element, onSave, onClose }) {
       bgColor,
       bannerHeight,
       bannerRadius,
+      fullWidth,
       title,
       fontSize,
       fontFamily,
@@ -131,7 +133,7 @@ export default function EditBannerModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
+    <div className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
       <div className="bg-white rounded-2xl sm:rounded-3xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
@@ -164,11 +166,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
             <button
               type="button"
               onClick={() => setBannerType('gradient')}
-              className={`py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                bannerType === 'gradient'
+              className={`py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${bannerType === 'gradient'
                   ? 'bg-white text-indigo-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined text-base">palette</span>
               Color / Gradient Theme
@@ -176,11 +177,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
             <button
               type="button"
               onClick={() => setBannerType('image')}
-              className={`py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                bannerType === 'image'
+              className={`py-2 px-3 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${bannerType === 'image'
                   ? 'bg-white text-indigo-600 shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined text-base">add_a_photo</span>
               Custom Upload Cover
@@ -200,11 +200,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                     type="button"
                     onClick={() => setGradientPreset(g.id)}
                     style={{ background: GRADIENT_PRESETS[g.id] }}
-                    className={`h-12 rounded-xl border flex items-end p-2 text-[10px] font-bold text-white transition-all cursor-pointer ${
-                      gradientPreset === g.id
+                    className={`h-12 rounded-xl border flex items-end p-2 text-[10px] font-bold text-white transition-all cursor-pointer ${gradientPreset === g.id
                         ? 'ring-2 ring-indigo-600 ring-offset-2 scale-102'
                         : 'hover:scale-102 border-transparent'
-                    }`}
+                      }`}
                   >
                     <span className="truncate drop-shadow-sm">{g.name}</span>
                   </button>
@@ -261,11 +260,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                       key={h.id}
                       type="button"
                       onClick={() => setBannerHeight(h.id)}
-                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
-                        bannerHeight === h.id
+                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${bannerHeight === h.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {h.label}
                     </button>
@@ -288,17 +286,52 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                       key={r.id}
                       type="button"
                       onClick={() => setBannerRadius(r.id)}
-                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${
-                        bannerRadius === r.id
+                      className={`py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${bannerRadius === r.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {r.label}
                     </button>
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Banner Container Width Options */}
+          <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-2 bg-indigo-50/30">
+            <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5 uppercase tracking-wide">
+              <span className="material-symbols-outlined text-base text-indigo-600">aspect_ratio</span>
+              Banner Container Width
+            </span>
+            <p className="text-[11px] text-slate-500">
+              Expand the banner across the full width of the screen or keep it inside the standard card layout:
+            </p>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setFullWidth(false)}
+                className={`py-2 px-3 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${!fullWidth
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+              >
+                <span className="material-symbols-outlined text-base">fit_screen</span>
+                Standard (Card Width)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFullWidth(true)}
+                className={`py-2 px-3 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center justify-center gap-1.5 ${fullWidth
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+              >
+                <span className="material-symbols-outlined text-base">fullscreen</span>
+                Full Viewport Width
+              </button>
             </div>
           </div>
 
@@ -349,9 +382,8 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                       type="button"
                       onClick={() => setTextColor(c.hex)}
                       style={{ backgroundColor: c.hex }}
-                      className={`w-5 h-5 rounded-full border border-slate-300 transition-all cursor-pointer ${
-                        textColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
-                      }`}
+                      className={`w-5 h-5 rounded-full border border-slate-300 transition-all cursor-pointer ${textColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
+                        }`}
                       title={c.name}
                     ></button>
                   ))}
@@ -384,11 +416,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                       key={size.id}
                       type="button"
                       onClick={() => setFontSize(size.id)}
-                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        fontSize === size.id
+                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${fontSize === size.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {size.label}
                     </button>
@@ -404,11 +435,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsBold(!isBold)}
-                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                      isBold
+                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${isBold
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     B (Bold)
                   </button>
@@ -416,11 +446,10 @@ export default function EditBannerModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsItalic(!isItalic)}
-                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${
-                      isItalic
+                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${isItalic
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                   >
                     I (Italic)
                   </button>

@@ -51,16 +51,16 @@ export function buildDropShadowFilter(size, color = '#0f172a') {
     case 'small':
       return `drop-shadow(0px 6px 14px ${c}66)`;
     case 'large':
-      return `drop-shadow(0px 18px 32px ${c}b3)`;
+      return `drop-shadow(0px 20px 45px ${c}b3)`;
     case 'glow':
-      return `drop-shadow(0px 0px 24px ${c}cc)`;
+      return `drop-shadow(0px 0px 32px ${c}cc)`;
     case 'medium':
     default:
-      return `drop-shadow(0px 10px 22px ${c}8c)`;
+      return `drop-shadow(0px 12px 30px ${c}8c)`;
   }
 }
 
-export default function IdentityElement({ data, textColor }) {
+export default function IdentityElement({ data, textColor, hasBannerAbove = false }) {
   const {
     avatarUrl,
     name,
@@ -70,6 +70,7 @@ export default function IdentityElement({ data, textColor }) {
     designation,
     department,
     companyName,
+    alignment = 'left', // 'left', 'center', 'right'
     avatarShape = 'circle',
     avatarBorderColor = '#ffffff',
     avatarBorderWidth = 4,
@@ -199,27 +200,82 @@ export default function IdentityElement({ data, textColor }) {
     };
   };
 
+  // Unified Alignment Configurations (Ensures Avatar and Text share exact same margin/padding offset line!)
+  const getAlignmentConfig = () => {
+    switch (alignment) {
+      case 'center':
+        return {
+          wrapper: 'items-center text-center px-4',
+          avatarRow: 'justify-center',
+          textRow: 'items-center text-center'
+        };
+      case 'right':
+        return {
+          wrapper: 'items-end text-right px-6 sm:px-8',
+          avatarRow: 'justify-end',
+          textRow: 'items-end text-right'
+        };
+      case 'left':
+      default:
+        return {
+          wrapper: 'items-start text-left px-6 sm:px-8',
+          avatarRow: 'justify-start',
+          textRow: 'items-start text-left'
+        };
+    }
+  };
+
+  const align = getAlignmentConfig();
+
   return (
-    <div className="flex flex-col items-center justify-center text-center w-full mt-2">
-      {/* Profile Picture Avatar */}
-      <div className="relative mb-6 flex justify-center">
-        {isPolygonShape ? (
-          /* Unclipped Outer Wrapper carrying CSS filter: drop-shadow(...) */
-          <div
-            style={{
-              filter: buildDropShadowFilter(avatarShadowSize, avatarShadowColor)
-            }}
-            className="relative flex items-center justify-center transition-all duration-300"
-          >
-            {/* Polygon Clipped Border Container */}
+    <div className={`flex flex-col w-full ${align.wrapper}`}>
+      {/* 1. Profile Picture Avatar Row (Unified offset with text below) */}
+      <div className={`w-full flex ${align.avatarRow}`}>
+        <div className={`relative mb-3 ${hasBannerAbove ? '-mt-20 sm:-mt-24 md:-mt-26 z-20' : 'mt-2 mb-4'}`}>
+          {isPolygonShape ? (
+            /* Unclipped Outer Wrapper carrying CSS filter: drop-shadow(...) */
+            <div
+              style={{
+                filter: buildDropShadowFilter(avatarShadowSize, avatarShadowColor)
+              }}
+              className="relative flex items-center justify-center transition-all duration-300"
+            >
+              {/* Polygon Clipped Border Container */}
+              <div
+                style={{
+                  backgroundColor: avatarBorderWidth > 0 ? avatarBorderColor : 'transparent',
+                  padding: `${avatarBorderWidth}px`
+                }}
+                className={`transition-all duration-300 flex items-center justify-center ${getOuterShapeClass()}`}
+              >
+                {/* Inner Photo Frame */}
+                <div className={`w-full h-full overflow-hidden bg-slate-100 flex items-center justify-center ${getInnerShapeClass()}`}>
+                  {avatarUrl ? (
+                    <img
+                      src={avatarUrl}
+                      alt={fullName || 'Profile Photo'}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <span className="material-symbols-outlined text-4xl text-slate-400">person</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Standard Rounded Border & Shadow Container */
             <div
               style={{
                 backgroundColor: avatarBorderWidth > 0 ? avatarBorderColor : 'transparent',
-                padding: `${avatarBorderWidth}px`
+                padding: `${avatarBorderWidth}px`,
+                boxShadow: buildShadowStyle(avatarShadowSize, avatarShadowColor)
               }}
               className={`transition-all duration-300 flex items-center justify-center ${getOuterShapeClass()}`}
             >
-              {/* Inner Photo Frame */}
               <div className={`w-full h-full overflow-hidden bg-slate-100 flex items-center justify-center ${getInnerShapeClass()}`}>
                 {avatarUrl ? (
                   <img
@@ -236,67 +292,44 @@ export default function IdentityElement({ data, textColor }) {
                 )}
               </div>
             </div>
-          </div>
-        ) : (
-          /* Standard Rounded Border & Shadow Container */
-          <div
-            style={{
-              backgroundColor: avatarBorderWidth > 0 ? avatarBorderColor : 'transparent',
-              padding: `${avatarBorderWidth}px`,
-              boxShadow: buildShadowStyle(avatarShadowSize, avatarShadowColor)
-            }}
-            className={`transition-all duration-300 flex items-center justify-center ${getOuterShapeClass()}`}
-          >
-            <div className={`w-full h-full overflow-hidden bg-slate-100 flex items-center justify-center ${getInnerShapeClass()}`}>
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={fullName || 'Profile Photo'}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.style.display = 'none';
-                  }}
-                />
-              ) : (
-                <span className="material-symbols-outlined text-4xl text-slate-400">person</span>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Profile Full Name */}
-      <h1
-        className={`font-bold tracking-tight mb-1 transition-all ${getFontSizeClass()}`}
-        style={getCustomStyle()}
-      >
-        {fullName || <span className="text-slate-400 italic text-base font-normal">Add Name & Photo...</span>}
-      </h1>
-
-      {/* Job Title & Designation */}
-      {titleAndDesignation && (
-        <h2
-          className="text-xs sm:text-sm font-semibold opacity-90 mb-0.5"
+      {/* 2. Text Info Row (Sharing exact same vertical alignment offset as Avatar) */}
+      <div className={`w-full flex flex-col ${align.textRow}`}>
+        {/* Profile Full Name */}
+        <h1
+          className={`font-bold tracking-tight mb-1 transition-all ${getFontSizeClass()}`}
           style={getCustomStyle()}
         >
-          {titleAndDesignation}
-        </h2>
-      )}
+          {fullName || <span className="text-slate-400 italic text-base font-normal">Add Name & Photo...</span>}
+        </h1>
 
-      {/* Department & Company */}
-      {departmentAndCompany && (
-        <p
-          className="text-xs font-medium opacity-75"
-          style={getCustomStyle()}
-        >
-          {departmentAndCompany}
-        </p>
-      )}
+        {/* Job Title & Designation */}
+        {titleAndDesignation && (
+          <h2
+            className="text-xs sm:text-sm font-semibold opacity-90 mb-0.5"
+            style={getCustomStyle()}
+          >
+            {titleAndDesignation}
+          </h2>
+        )}
 
-      {!fullName && !hasWorkInfo && (
-        <p className="text-xs text-slate-400 mt-1">Click edit to enter your profile information.</p>
-      )}
+        {/* Department & Company */}
+        {departmentAndCompany && (
+          <p
+            className="text-xs font-medium opacity-75"
+            style={getCustomStyle()}
+          >
+            {departmentAndCompany}
+          </p>
+        )}
+
+        {!fullName && !hasWorkInfo && (
+          <p className="text-xs text-slate-400 mt-1">Click edit to enter your profile information.</p>
+        )}
+      </div>
     </div>
   );
 }

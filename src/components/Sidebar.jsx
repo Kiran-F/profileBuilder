@@ -14,7 +14,7 @@ export default function Sidebar() {
       e.dataTransfer.setData('text/plain', type);
       e.dataTransfer.setData('text/html', type);
       e.dataTransfer.effectAllowed = 'copy';
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const navItems = [
@@ -61,11 +61,10 @@ export default function Sidebar() {
                 setActiveTab(item.key);
                 handleDragStart(e, item.key);
               }}
-              className={`flex items-center justify-start gap-2.5 px-3 py-3 md:py-3.5 rounded-xl text-sm font-semibold transition-all cursor-grab active:cursor-grabbing border ${
-                isActive
-                  ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-2xs'
-                  : 'bg-slate-50/50 border-slate-200/80 text-slate-700 hover:bg-indigo-50/60 hover:border-indigo-300 hover:text-indigo-600'
-              }`}
+              className={`flex items-center justify-start gap-2.5 px-3 py-3 md:py-3.5 rounded-xl text-sm font-semibold transition-all cursor-grab active:cursor-grabbing border ${isActive
+                ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-2xs'
+                : 'bg-slate-50/50 border-slate-200/80 text-slate-700 hover:bg-indigo-50/60 hover:border-indigo-300 hover:text-indigo-600'
+                }`}
               title="Drag and drop onto canvas"
             >
               <span className="material-symbols-outlined text-[20px] text-indigo-600 flex-shrink-0">

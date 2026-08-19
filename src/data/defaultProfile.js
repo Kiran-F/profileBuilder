@@ -1,6 +1,7 @@
 export const EMPTY_ELEMENT_DATA = {
   identity: {
     avatarUrl: '',
+    rawAvatarUrl: '',
     firstName: '',
     lastName: '',
     name: '',
@@ -8,7 +9,12 @@ export const EMPTY_ELEMENT_DATA = {
     designation: '',
     department: '',
     companyName: '',
-    subtitle: '',
+    alignment: 'left', // 'left', 'center', 'right'
+    avatarShape: 'circle',
+    avatarBorderColor: '#ffffff',
+    avatarBorderWidth: 4,
+    avatarShadowSize: 'medium',
+    avatarShadowColor: '#0f172a',
     fontSize: 'medium',
     fontColor: '',
     isBold: false,
@@ -126,6 +132,7 @@ export const EMPTY_ELEMENT_DATA = {
     bgColor: '#4648d4',
     bannerHeight: 'medium', // 'compact' (100px), 'medium' (160px), 'tall' (220px)
     bannerRadius: 'rounded-2xl', // 'rounded-none', 'rounded-2xl', 'rounded-3xl'
+    fullWidth: false, // false (card width), true (full 100vw viewport width)
     title: '', // Optional overlay text (e.g. "Welcome to my profile")
     fontSize: 'medium',
     fontFamily: 'Inter',
@@ -136,47 +143,16 @@ export const EMPTY_ELEMENT_DATA = {
   }
 };
 
-export const TEMPLATE_ELEMENTS = {
-  identity: {
-    type: 'identity',
-    title: 'Identity',
-    description: 'Avatar, Name & Work Info',
-    icon: 'person'
-  },
-  bio: {
-    type: 'bio',
-    title: 'Bio',
-    description: 'Roles & Description',
-    icon: 'description'
-  },
-  social: {
-    type: 'social',
-    title: 'Social',
-    description: 'Social Icons & Links',
-    icon: 'share'
-  },
-  badges: {
-    type: 'badges',
-    title: 'Badges',
-    description: 'Square Badges & Credentials',
-    icon: 'workspace_premium'
-  },
-  youtube: {
-    type: 'youtube',
-    title: 'YouTube Video',
-    description: 'Embed YouTube Video',
-    icon: 'play_circle'
-  },
-  text: {
-    type: 'text',
-    title: 'Text Block',
-    description: 'Custom Heading & Text',
-    icon: 'text_fields'
-  },
-  contact: {
-    type: 'contact',
-    title: 'Contact Info',
-    description: 'Email, Phone, Web & Location',
-    icon: 'contacts'
-  }
-};
+export function enforceFixedOrder(elements) {
+  if (!Array.isArray(elements) || elements.length <= 1) return elements || [];
+
+  const banner = elements.find((e) => e.type === 'banner');
+  const identity = elements.find((e) => e.type === 'identity');
+  const remaining = elements.filter((e) => e.type !== 'banner' && e.type !== 'identity');
+
+  const fixed = [];
+  if (banner) fixed.push(banner);
+  if (identity) fixed.push(identity);
+
+  return [...fixed, ...remaining];
+}

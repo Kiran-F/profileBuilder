@@ -52,9 +52,9 @@ export function buildDropShadowFilter(size, color = '#0f172a') {
     case 'small':
       return `drop-shadow(0px 6px 14px ${c}66)`;
     case 'large':
-      return `drop-shadow(0px 18px 32px ${c}b3)`;
+      return `drop-shadow(0px 20px 45px ${c}b3)`;
     case 'glow':
-      return `drop-shadow(0px 0px 24px ${c}cc)`;
+      return `drop-shadow(0px 0px 32px ${c}cc)`;
     case 'medium':
     default:
       return `drop-shadow(0px 10px 22px ${c}8c)`;
@@ -222,7 +222,7 @@ export default function AvatarCropModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn">
+    <div className="fixed inset-0 z-[250] bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn">
       <div className="bg-white rounded-2xl sm:rounded-3xl max-w-4xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">

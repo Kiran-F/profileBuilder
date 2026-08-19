@@ -37,7 +37,7 @@ export const GRADIENT_PRESETS = {
   'gold-amber': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
 };
 
-export default function BannerElement({ data }) {
+export default function BannerElement({ data, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -47,6 +47,7 @@ export default function BannerElement({ data }) {
     bgColor = '#4648d4',
     bannerHeight = 'medium',
     bannerRadius = 'rounded-2xl',
+    fullWidth = false,
     title = '',
     fontSize = 'medium',
     fontFamily = 'Inter',
@@ -112,8 +113,10 @@ export default function BannerElement({ data }) {
     };
   };
 
+  const isStretched = fullWidth && isPreview;
+
   return (
-    <div className="w-full pb-2 select-none">
+    <div className={`pb-2 select-none ${isStretched ? 'w-screen relative left-1/2 -translate-x-1/2 max-w-none' : 'w-full'}`}>
       <div
         style={getBannerBackgroundStyle()}
         className={`w-full relative overflow-hidden flex items-end justify-center p-4 sm:p-5 shadow-sm transition-all duration-300 ${getHeightClass()} ${bannerRadius}`}
