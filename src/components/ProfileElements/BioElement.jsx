@@ -32,6 +32,7 @@ export default function BioElement({ data, textColor }) {
   const {
     bioLines,
     bioText,
+    alignment = 'center', // 'left', 'center', 'right'
     fontSize = 'medium',
     fontColor = '',
     isBold = false,
@@ -52,6 +53,18 @@ export default function BioElement({ data, textColor }) {
       </div>
     );
   }
+
+  const getAlignmentClass = () => {
+    switch (alignment) {
+      case 'left':
+        return 'text-left items-start px-2 sm:px-4';
+      case 'right':
+        return 'text-right items-end px-2 sm:px-4';
+      case 'center':
+      default:
+        return 'text-center items-center px-2 sm:px-4';
+    }
+  };
 
   const getFontSizeClass = () => {
     switch (fontSize) {
@@ -77,20 +90,22 @@ export default function BioElement({ data, textColor }) {
       fontWeight: isBold ? '700' : '500',
       fontStyle: isItalic ? 'italic' : 'normal',
       textDecoration: isUnderline ? 'underline' : 'none',
-      wordBreak: 'break-word'
+      textAlign: alignment,
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere'
     };
   };
 
   return (
-    <div className="w-full text-center my-2">
+    <div className={`w-full my-2 flex flex-col ${getAlignmentClass()}`}>
       <div
-        className={`flex flex-col items-center justify-center gap-1 opacity-90 transition-all ${getFontSizeClass()}`}
+        className={`flex flex-col w-full gap-1 opacity-90 transition-all ${getAlignmentClass()} ${getFontSizeClass()}`}
         style={getCustomStyle()}
       >
         {lines.map((line, idx) => (
           <p
             key={idx}
-            className={idx === lines.length - 1 && lines.length > 2 ? 'mt-1.5 opacity-80' : ''}
+            className={`w-full break-words max-w-full overflow-hidden ${idx === lines.length - 1 && lines.length > 2 ? 'mt-1.5 opacity-80' : ''}`}
           >
             {line}
           </p>

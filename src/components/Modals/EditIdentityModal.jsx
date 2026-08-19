@@ -153,7 +153,9 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
       color: fontColor || 'inherit',
       fontWeight: isBold ? '700' : '500',
       fontStyle: isItalic ? 'italic' : 'normal',
-      textDecoration: isUnderline ? 'underline' : 'none'
+      textDecoration: isUnderline ? 'underline' : 'none',
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere'
     };
   };
 
@@ -200,8 +202,8 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
 
   return (
     <>
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
-        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden flex flex-col max-h-[92vh] my-auto">
+      <div onClick={onClose} className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+        <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden flex flex-col max-h-[92vh] my-auto">
           {/* Modal Header */}
           <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <div className="flex items-center gap-2">
@@ -547,10 +549,10 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
                       )}
                     </div>
                   </div>
-                  <div style={getPreviewStyle()} className={`mt-1.5 w-full flex flex-col ${getPreviewAlignmentConfig().textRow} ${getFontSizeClass()}`}>
-                    <h3 className="font-bold tracking-tight mb-0.5">{fullName}</h3>
-                    <p className="text-xs opacity-90">{titleText}</p>
-                    {companyName && <p className="text-[11px] opacity-75">{companyName}</p>}
+                  <div style={getPreviewStyle()} className={`mt-1.5 w-full flex flex-col break-words max-w-full overflow-hidden ${getPreviewAlignmentConfig().textRow} ${getFontSizeClass()}`}>
+                    <h3 className="font-bold tracking-tight mb-0.5 break-words max-w-full">{fullName}</h3>
+                    <p className="text-xs opacity-90 break-words max-w-full">{titleText}</p>
+                    {companyName && <p className="text-[11px] opacity-75 break-words max-w-full">{companyName}</p>}
                   </div>
                 </div>
               </div>

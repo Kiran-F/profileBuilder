@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import Canvas from './components/Canvas';
 import EditIdentityModal from './components/Modals/EditIdentityModal';
@@ -182,6 +182,25 @@ export default function App() {
   const [editingElement, setEditingElement] = useState(null);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [activeColorTab, setActiveColorTab] = useState('background');
+  const colorPickerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
+        setIsColorPickerOpen(false);
+      }
+    };
+
+    if (isColorPickerOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isColorPickerOpen]);
 
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -314,7 +333,7 @@ export default function App() {
         {/* Action Controls & Color Picker */}
         <div className="flex items-center gap-1.5 sm:gap-3">
           {/* "Change Colors" Button */}
-          <div className="relative">
+          <div ref={colorPickerRef} className="relative">
             <button
               onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
               className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[11px] sm:text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs"

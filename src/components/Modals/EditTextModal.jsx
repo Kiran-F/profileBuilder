@@ -75,7 +75,9 @@ export default function EditTextModal({ element, onSave, onClose }) {
       fontWeight: isBold ? '700' : '400',
       fontStyle: isItalic ? 'italic' : 'normal',
       textDecoration: isUnderline ? 'underline' : 'none',
-      textAlign: alignment
+      textAlign: alignment,
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere'
     };
   };
 
@@ -94,8 +96,8 @@ export default function EditTextModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
+    <div onClick={onClose} className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2">
@@ -315,14 +317,14 @@ export default function EditTextModal({ element, onSave, onClose }) {
           </div>
 
           {/* Real-time Live Text Preview Box */}
-          <div className="border border-indigo-100 rounded-2xl p-3.5 bg-indigo-50/40">
+          <div className="border border-indigo-100 rounded-2xl p-3.5 bg-indigo-50/40 overflow-hidden max-w-full">
             <span className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider block mb-1">
               Live Preview:
             </span>
-            <div style={getPreviewStyle()} className={`transition-all ${getFontSizeClass()}`}>
-              {heading && <h4 className="font-bold mb-1 text-base">{heading}</h4>}
+            <div style={getPreviewStyle()} className={`transition-all break-words max-w-full overflow-hidden ${getFontSizeClass()}`}>
+              {heading && <h4 className="font-bold mb-1 text-base break-words max-w-full">{heading}</h4>}
               {content ? (
-                <p className="whitespace-pre-line leading-relaxed">{content}</p>
+                <p className="whitespace-pre-line leading-relaxed break-words max-w-full">{content}</p>
               ) : (
                 <p className="text-slate-400 italic text-xs">Text block preview will appear here...</p>
               )}

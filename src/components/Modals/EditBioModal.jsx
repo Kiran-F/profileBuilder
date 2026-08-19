@@ -44,6 +44,7 @@ export default function EditBioModal({ element, onSave, onClose }) {
   const initialText = element.data.bioLines ? element.data.bioLines.join('\n') : (element.data.bioText || '');
 
   const [bioText, setBioText] = useState(initialText);
+  const [alignment, setAlignment] = useState(element.data.alignment || 'center');
   const [fontSize, setFontSize] = useState(element.data.fontSize || 'medium');
   const [fontColor, setFontColor] = useState(element.data.fontColor || '');
   const [isBold, setIsBold] = useState(element.data.isBold || false);
@@ -58,6 +59,7 @@ export default function EditBioModal({ element, onSave, onClose }) {
       ...element.data,
       bioLines: lines,
       bioText: bioText,
+      alignment,
       fontSize,
       fontColor,
       isBold,
@@ -67,6 +69,18 @@ export default function EditBioModal({ element, onSave, onClose }) {
     });
   };
 
+  const getPreviewAlignmentClass = () => {
+    switch (alignment) {
+      case 'left':
+        return 'text-left items-start';
+      case 'right':
+        return 'text-right items-end';
+      case 'center':
+      default:
+        return 'text-center items-center';
+    }
+  };
+
   const getPreviewStyle = () => {
     const selectedFont = FONT_FAMILIES.find((f) => f.id === fontFamily)?.family || 'inherit';
     return {
@@ -74,7 +88,10 @@ export default function EditBioModal({ element, onSave, onClose }) {
       color: fontColor || 'inherit',
       fontWeight: isBold ? '700' : '500',
       fontStyle: isItalic ? 'italic' : 'normal',
-      textDecoration: isUnderline ? 'underline' : 'none'
+      textDecoration: isUnderline ? 'underline' : 'none',
+      textAlign: alignment,
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere'
     };
   };
 
@@ -93,8 +110,8 @@ export default function EditBioModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden flex flex-col max-h-[92vh] my-auto">
+    <div onClick={onClose} className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-100 w-full max-w-lg overflow-hidden flex flex-col max-h-[92vh] my-auto">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
           <div className="flex items-center gap-2">
@@ -126,7 +143,7 @@ export default function EditBioModal({ element, onSave, onClose }) {
               placeholder="e.g.&#10;Software Engineer & Tech Lead&#10;Building scalable web applications&#10;Open source enthusiast"
               value={bioText}
               onChange={(e) => setBioText(e.target.value)}
-              className="w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-indigo-500 leading-relaxed resize-y font-medium"
+              className="w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-indigo-500 leading-relaxed resize-y font-medium break-words"
             />
           </div>
 
@@ -136,6 +153,34 @@ export default function EditBioModal({ element, onSave, onClose }) {
               <span className="material-symbols-outlined text-base text-indigo-600">text_format</span>
               Typography & Font Style
             </span>
+
+            {/* Text Alignment Selector */}
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-500 mb-1">
+                Text Alignment
+              </label>
+              <div className="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl">
+                {[
+                  { id: 'left', label: 'Left', icon: 'format_align_left' },
+                  { id: 'center', label: 'Center', icon: 'format_align_center' },
+                  { id: 'right', label: 'Right', icon: 'format_align_right' }
+                ].map((a) => (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => setAlignment(a.id)}
+                    className={`py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      alignment === a.id
+                        ? 'bg-indigo-600 text-white shadow-2xs font-bold'
+                        : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">{a.icon}</span>
+                    <span>{a.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Font Family Dropdown */}
             <div>
@@ -207,7 +252,7 @@ export default function EditBioModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsItalic(!isItalic)}
-                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${
+                    className={`py-1.5 text-xs italic font-semibold rounded-lg border transition-all cursor-pointer ${
                       isItalic
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -220,7 +265,7 @@ export default function EditBioModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsUnderline(!isUnderline)}
-                    className={`py-1.5 text-xs font-bold underline rounded-lg border transition-all cursor-pointer ${
+                    className={`py-1.5 text-xs underline font-semibold rounded-lg border transition-all cursor-pointer ${
                       isUnderline
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -267,17 +312,17 @@ export default function EditBioModal({ element, onSave, onClose }) {
           </div>
 
           {/* Real-time Live Preview Box */}
-          <div className="border border-indigo-100 rounded-2xl p-3.5 bg-indigo-50/40">
+          <div className="border border-indigo-100 rounded-2xl p-3.5 bg-indigo-50/40 overflow-hidden max-w-full">
             <span className="text-[11px] font-semibold text-indigo-600 uppercase tracking-wider block mb-1">
               Live Preview:
             </span>
             <div
               style={getPreviewStyle()}
-              className={`text-center transition-all ${getFontSizeClass()}`}
+              className={`transition-all break-words max-w-full overflow-hidden flex flex-col ${getPreviewAlignmentClass()} ${getFontSizeClass()}`}
             >
               {bioText ? (
                 bioText.split('\n').filter(Boolean).map((line, idx) => (
-                  <p key={idx} className="leading-normal">{line}</p>
+                  <p key={idx} className="leading-normal break-words max-w-full overflow-hidden">{line}</p>
                 ))
               ) : (
                 <p className="text-slate-400 italic text-xs">Bio text preview will appear here...</p>

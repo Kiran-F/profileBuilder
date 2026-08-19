@@ -25,6 +25,7 @@ export const EMPTY_ELEMENT_DATA = {
   bio: {
     bioLines: [],
     bioText: '',
+    alignment: 'center', // 'left', 'center', 'right'
     fontSize: 'medium',
     fontColor: '',
     isBold: false,
