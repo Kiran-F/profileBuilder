@@ -653,17 +653,17 @@ export default function App() {
               onDragStart={(e) => handleMobileDragStart(e, item.key)}
               onDragEnd={handleMobileDragEnd}
               onMouseUp={handleMobileDragEnd}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-2xl transition-all cursor-grab active:cursor-grabbing flex-shrink-0 relative ${
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-grab active:cursor-grabbing flex-shrink-0 relative ${
                 isDragging
-                  ? 'scale-140 -translate-y-4 z-50 bg-indigo-600 text-white shadow-2xl ring-4 ring-indigo-500/30 font-bold'
-                  : 'text-slate-700 hover:text-indigo-600 active:scale-95'
+                  ? 'bg-indigo-600 text-white font-bold ring-2 ring-indigo-400 shadow-md'
+                  : 'text-slate-700 hover:text-indigo-600'
               }`}
               title={`Drag onto canvas to add ${item.label}`}
             >
-              <span className={`material-symbols-outlined transition-all ${isDragging ? 'text-3xl text-white animate-pulse' : 'text-xl text-indigo-600'}`}>
+              <span className={`material-symbols-outlined text-xl transition-colors ${isDragging ? 'text-white' : 'text-indigo-600'}`}>
                 {item.icon}
               </span>
-              <span className={`transition-all whitespace-nowrap ${isDragging ? 'text-xs font-bold text-white' : 'text-[10px] font-semibold'}`}>
+              <span className={`text-[10px] whitespace-nowrap transition-colors ${isDragging ? 'font-bold text-white' : 'font-semibold'}`}>
                 {item.label}
               </span>
             </div>
