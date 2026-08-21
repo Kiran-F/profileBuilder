@@ -183,6 +183,7 @@ export default function App() {
   const [editingElement, setEditingElement] = useState(null);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [activeColorTab, setActiveColorTab] = useState('background');
+  const [activeDraggedType, setActiveDraggedType] = useState(null);
   const colorPickerRef = useRef(null);
 
   useEffect(() => {
@@ -308,6 +309,7 @@ export default function App() {
   const handleMobileDragStart = (e, type) => {
     window.__draggedSidebarType = type;
     window.__draggedSource = 'sidebar';
+    setActiveDraggedType(type);
     try {
       e.dataTransfer.setData('text/plain', type); // Ensures every browser understands the drag data payload
       e.dataTransfer.setData('application/x-profile-block', type); // Ensures the Canvas knows this is a VALID profile block (and NOT an external image/file/link)
@@ -318,6 +320,7 @@ export default function App() {
   const handleMobileDragEnd = () => {
     window.__draggedSidebarType = null;
     window.__draggedSource = null;
+    setActiveDraggedType(null);
   };
 
   return (
@@ -641,21 +644,31 @@ export default function App() {
           { key: 'contactForm', label: 'Contact Me', icon: 'connect_without_contact' },
           { key: 'links', label: 'Links', icon: 'add_link' },
           { key: 'gallery', label: 'Gallery', icon: 'collections' }
-        ].map((item) => (
-          <div
-            key={item.key}
-            draggable="true"
-            onDragStart={(e) => handleMobileDragStart(e, item.key)}
-            onDragEnd={handleMobileDragEnd}
-            onMouseUp={handleMobileDragEnd}
-            onClick={() => handleAddElementAtIndex(item.key, elements.length)}
-            className="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-slate-700 hover:text-indigo-600 active:scale-95 transition-all cursor-pointer flex-shrink-0"
-            title={`Tap or drag to add ${item.label}`}
-          >
-            <span className="material-symbols-outlined text-xl text-indigo-600">{item.icon}</span>
-            <span className="text-[10px] font-semibold whitespace-nowrap">{item.label}</span>
-          </div>
-        ))}
+        ].map((item) => {
+          const isDragging = activeDraggedType === item.key;
+          return (
+            <div
+              key={item.key}
+              draggable="true"
+              onDragStart={(e) => handleMobileDragStart(e, item.key)}
+              onDragEnd={handleMobileDragEnd}
+              onMouseUp={handleMobileDragEnd}
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-2xl transition-all cursor-grab active:cursor-grabbing flex-shrink-0 relative ${
+                isDragging
+                  ? 'scale-140 -translate-y-4 z-50 bg-indigo-600 text-white shadow-2xl ring-4 ring-indigo-500/30 font-bold'
+                  : 'text-slate-700 hover:text-indigo-600 active:scale-95'
+              }`}
+              title={`Drag onto canvas to add ${item.label}`}
+            >
+              <span className={`material-symbols-outlined transition-all ${isDragging ? 'text-3xl text-white animate-pulse' : 'text-xl text-indigo-600'}`}>
+                {item.icon}
+              </span>
+              <span className={`transition-all whitespace-nowrap ${isDragging ? 'text-xs font-bold text-white' : 'text-[10px] font-semibold'}`}>
+                {item.label}
+              </span>
+            </div>
+          );
+        })}
 
         <div className="w-[1px] h-6 bg-slate-200 flex-shrink-0"></div>
 
