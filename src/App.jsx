@@ -622,108 +622,53 @@ export default function App() {
         />
       </div>
 
-      {/* FIXED BOTTOM DRAGGABLE BAR FOR MOBILE (VISIBLE ON ALL SCREENS < 640px) */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2.5 px-4 flex items-center gap-4 overflow-x-auto shadow-lg select-none scrollbar-none">
-        {/* 1. Identity Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'identity')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Identity"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">fingerprint</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Identity</span>
-        </div>
+      {/* FIXED BOTTOM DRAGGABLE / TAP BAR FOR MOBILE (VISIBLE ON ALL SCREENS < 640px) */}
+      <nav
+        onTouchStart={(e) => e.stopPropagation()}
+        onTouchMove={(e) => e.stopPropagation()}
+        style={{ touchAction: 'pan-x', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 py-2.5 px-3 flex items-center gap-3 overflow-x-auto shadow-lg select-none scrollbar-none overscroll-contain"
+      >
+        {[
+          { key: 'banner', label: 'Banner', icon: 'panorama' },
+          { key: 'identity', label: 'Identity', icon: 'fingerprint' },
+          { key: 'bio', label: 'Bio', icon: 'description' },
+          { key: 'social', label: 'Social', icon: 'share' },
+          { key: 'badges', label: 'Badges', icon: 'workspace_premium' },
+          { key: 'youtube', label: 'YouTube', icon: 'play_circle' },
+          { key: 'text', label: 'Text', icon: 'text_fields' },
+          { key: 'contact', label: 'Contact Info', icon: 'contacts' },
+          { key: 'contactForm', label: 'Contact Me', icon: 'connect_without_contact' },
+          { key: 'links', label: 'Links', icon: 'add_link' },
+          { key: 'gallery', label: 'Gallery', icon: 'collections' }
+        ].map((item) => (
+          <div
+            key={item.key}
+            draggable="true"
+            onDragStart={(e) => handleMobileDragStart(e, item.key)}
+            onDragEnd={handleMobileDragEnd}
+            onMouseUp={handleMobileDragEnd}
+            onClick={() => handleAddElementAtIndex(item.key, elements.length)}
+            className="flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl text-slate-700 hover:text-indigo-600 active:scale-95 transition-all cursor-pointer flex-shrink-0"
+            title={`Tap or drag to add ${item.label}`}
+          >
+            <span className="material-symbols-outlined text-xl text-indigo-600">{item.icon}</span>
+            <span className="text-[10px] font-semibold whitespace-nowrap">{item.label}</span>
+          </div>
+        ))}
 
-        {/* 2. Bio Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'bio')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Bio"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">description</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Bio</span>
-        </div>
+        <div className="w-[1px] h-6 bg-slate-200 flex-shrink-0"></div>
 
-        {/* 3. Social Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'social')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Social"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">share</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Social</span>
-        </div>
-
-        {/* 4. Badges Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'badges')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Badges"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">workspace_premium</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Badges</span>
-        </div>
-
-        {/* 5. YouTube Video Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'youtube')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add YouTube Video"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">play_circle</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">YouTube</span>
-        </div>
-
-        {/* 6. Text Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'text')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Text Block"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">text_fields</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Text</span>
-        </div>
-
-        {/* 7. Contact Info Block Source */}
-        <div
-          draggable="true"
-          onDragStart={(e) => handleMobileDragStart(e, 'contact')}
-          onDragEnd={handleMobileDragEnd}
-          onMouseUp={handleMobileDragEnd}
-          className="flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl text-slate-700 hover:text-indigo-600 transition-all cursor-grab active:cursor-grabbing flex-shrink-0"
-          title="Drag onto canvas to add Contact Info"
-        >
-          <span className="material-symbols-outlined text-xl text-indigo-600">contacts</span>
-          <span className="text-[10px] font-semibold whitespace-nowrap">Contact</span>
-        </div>
-
-        {/* 6. Clear Canvas Option */}
+        {/* Clear Canvas Option */}
         <button
           type="button"
           disabled={elements.length === 0}
           onClick={handleClearCanvas}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-pointer flex-shrink-0 ${elements.length > 0
-            ? 'text-red-500 hover:text-red-700'
-            : 'text-slate-300 opacity-40 pointer-events-none'
-            }`}
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all flex-shrink-0 ${
+            elements.length > 0
+              ? 'text-red-500 hover:text-red-700 cursor-pointer active:scale-95'
+              : 'text-slate-400 opacity-75 pointer-events-none'
+          }`}
           title="Clear all canvas elements"
         >
           <span className="material-symbols-outlined text-xl">delete_sweep</span>
