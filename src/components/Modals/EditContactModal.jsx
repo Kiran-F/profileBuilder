@@ -98,8 +98,8 @@ export default function EditContactModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div onClick={onClose} className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
+    <div className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
+      <div className="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2">
@@ -243,11 +243,10 @@ export default function EditContactModal({ element, onSave, onClose }) {
                       key={size.id}
                       type="button"
                       onClick={() => setFontSize(size.id)}
-                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                        fontSize === size.id
+                      className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${fontSize === size.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
+                        }`}
                     >
                       {size.label}
                     </button>
@@ -264,11 +263,10 @@ export default function EditContactModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsBold(!isBold)}
-                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                      isBold
+                    className={`py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${isBold
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                     title="Bold"
                   >
                     B
@@ -277,11 +275,10 @@ export default function EditContactModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsItalic(!isItalic)}
-                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${
-                      isItalic
+                    className={`py-1.5 text-xs font-bold italic rounded-lg border transition-all cursor-pointer ${isItalic
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                     title="Italic"
                   >
                     I
@@ -290,11 +287,10 @@ export default function EditContactModal({ element, onSave, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsUnderline(!isUnderline)}
-                    className={`py-1.5 text-xs font-bold underline rounded-lg border transition-all cursor-pointer ${
-                      isUnderline
+                    className={`py-1.5 text-xs font-bold underline rounded-lg border transition-all cursor-pointer ${isUnderline
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                         : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }`}
+                      }`}
                     title="Underline"
                   >
                     U
@@ -315,9 +311,8 @@ export default function EditContactModal({ element, onSave, onClose }) {
                     type="button"
                     onClick={() => setFontColor(c.hex)}
                     style={{ backgroundColor: c.hex || '#94a3b8' }}
-                    className={`w-6 h-6 rounded-full border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${
-                      fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
-                    }`}
+                    className={`w-6 h-6 rounded-full border border-slate-300 transition-all cursor-pointer flex items-center justify-center ${fontColor === c.hex ? 'ring-2 ring-indigo-600 scale-110' : 'hover:scale-105'
+                      }`}
                     title={c.name}
                   >
                     {!c.hex && <span className="material-symbols-outlined text-xs text-white">do_not_disturb_alt</span>}

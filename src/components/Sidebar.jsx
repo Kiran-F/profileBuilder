@@ -26,6 +26,7 @@ export default function Sidebar() {
     { key: 'youtube', label: 'YouTube Video', icon: 'play_circle', desc: 'Embed YouTube Video' },
     { key: 'text', label: 'Text Block', icon: 'text_fields', desc: 'Custom Heading & Text' },
     { key: 'contact', label: 'Contact Info', icon: 'contacts', desc: 'Email, Phone, Web & Location' },
+    { key: 'contactForm', label: 'Contact Me', icon: 'connect_without_contact', desc: 'Visitor Contact Form Button' },
     { key: 'links', label: 'Links', icon: 'add_link', desc: 'Custom Button Links' },
     { key: 'gallery', label: 'Gallery / Certificates', icon: 'collections', desc: 'Images, Events & Certificates' }
   ];

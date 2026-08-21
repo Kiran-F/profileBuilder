@@ -9,6 +9,7 @@ import ContactElement from './ProfileElements/ContactElement';
 import LinksElement from './ProfileElements/LinksElement';
 import GalleryElement from './ProfileElements/GalleryElement';
 import BannerElement from './ProfileElements/BannerElement';
+import ContactFormElement from './ProfileElements/ContactFormElement';
 import { computeProfileBackgroundStyle } from '../utils/backgroundStyles';
 
 export default function FullProfileWebPage({
@@ -107,6 +108,9 @@ export default function FullProfileWebPage({
         return <LinksElement data={elem.data} textColor={textColor} />;
       case 'gallery':
         return <GalleryElement data={elem.data} textColor={textColor} />;
+      case 'contactForm':
+      case 'contact_form':
+        return <ContactFormElement data={elem.data} isPreview={true} />;
       default:
         return null;
     }

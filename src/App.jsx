@@ -11,6 +11,7 @@ import EditContactModal from './components/Modals/EditContactModal';
 import EditLinksModal from './components/Modals/EditLinksModal';
 import EditGalleryModal from './components/Modals/EditGalleryModal';
 import EditBannerModal from './components/Modals/EditBannerModal';
+import EditContactFormModal from './components/Modals/EditContactFormModal';
 import FullProfileWebPage from './components/FullProfileWebPage';
 import { EMPTY_ELEMENT_DATA, enforceFixedOrder } from './data/defaultProfile';
 import { PROFILE_BACKGROUND_GRADIENTS } from './utils/backgroundStyles';
@@ -805,6 +806,14 @@ export default function App() {
 
       {editingElement && editingElement.type === 'banner' && (
         <EditBannerModal
+          element={editingElement}
+          onSave={handleSaveElementData}
+          onClose={() => setEditingElement(null)}
+        />
+      )}
+
+      {editingElement && (editingElement.type === 'contactForm' || editingElement.type === 'contact_form') && (
+        <EditContactFormModal
           element={editingElement}
           onSave={handleSaveElementData}
           onClose={() => setEditingElement(null)}

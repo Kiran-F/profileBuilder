@@ -9,6 +9,7 @@ import ContactElement from './ProfileElements/ContactElement';
 import LinksElement from './ProfileElements/LinksElement';
 import GalleryElement from './ProfileElements/GalleryElement';
 import BannerElement from './ProfileElements/BannerElement';
+import ContactFormElement from './ProfileElements/ContactFormElement';
 import { computeProfileBackgroundStyle } from '../utils/backgroundStyles';
 
 export default function Canvas({
@@ -53,7 +54,7 @@ export default function Canvas({
     if (e && e.dataTransfer) {
       try {
         const text = e.dataTransfer.getData('text/plain') || e.dataTransfer.getData('application/x-profile-block');
-        if (text && (text === 'identity' || text === 'bio' || text === 'social' || text === 'badges' || text === 'youtube' || text === 'text' || text === 'contact' || text === 'links' || text === 'gallery' || text === 'banner')) {
+        if (text) {
           return text;
         }
       } catch (err) { }
@@ -115,7 +116,7 @@ export default function Canvas({
     // If dragging a top banner element, ALWAYS lock position to index 0!
     let insertPosition = sidebarType === 'banner' ? 0 : (targetIdx !== undefined ? targetIdx : (dropTargetIndex !== null ? dropTargetIndex : elements.length));
 
-    if (sidebarType && (sidebarType === 'identity' || sidebarType === 'bio' || sidebarType === 'social' || sidebarType === 'badges' || sidebarType === 'youtube' || sidebarType === 'text' || sidebarType === 'contact' || sidebarType === 'links' || sidebarType === 'gallery' || sidebarType === 'banner')) {
+    if (sidebarType) {
       onAddElementAtIndex(sidebarType, insertPosition);
     }
 
@@ -146,6 +147,9 @@ export default function Canvas({
         return <LinksElement data={elem.data} textColor={textColor} />;
       case 'gallery':
         return <GalleryElement data={elem.data} textColor={textColor} />;
+      case 'contactForm':
+      case 'contact_form':
+        return <ContactFormElement data={elem.data} isPreview={false} />;
       default:
         return null;
     }
@@ -169,7 +173,7 @@ export default function Canvas({
           handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
         }
       }}
-      className="flex-1 ml-0 sm:ml-44 md:ml-60 bg-[#f7f9fb] p-2 sm:p-4 md:p-8 pb-28 sm:pb-8 flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
+      className="flex-1 ml-0 sm:ml-44 md:ml-60 bg-[#f7f9fb] flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
     >
       {/* Central Profile Card Container */}
       <div
@@ -182,7 +186,7 @@ export default function Canvas({
             handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
           }
         }}
-        className={`w-full max-w-none rounded-xl sm:rounded-2xl md:rounded-3xl shadow-sm border transition-all p-3 sm:p-6 md:p-12 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${isCanvasDragOver
+        className={`w-full max-w-none shadow-sm border transition-all p-3 sm:p-6 md:p-5 flex flex-col items-center relative min-h-[500px] sm:min-h-[580px] md:min-h-[640px] my-1 sm:my-2 ${isCanvasDragOver
           ? 'border-indigo-500 ring-4 ring-indigo-500/10'
           : 'border-slate-200'
           }`}

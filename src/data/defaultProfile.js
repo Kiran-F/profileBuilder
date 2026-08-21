@@ -141,6 +141,34 @@ export const EMPTY_ELEMENT_DATA = {
     isBold: true,
     isItalic: false,
     hasOverlay: true
+  },
+  contactForm: {
+    saveContactLabel: 'Save Contact',
+    connectLabel: 'Connect',
+    contactName: 'Kiran Fatima AccessIT',
+    contactEmail: 'fazaian2004@gmail.com',
+    contactPhone: '+92 839-2893829',
+    contactTitle: 'Intern',
+    buttonColor: '#4648d4',
+    buttonTextColor: '#ffffff',
+    buttonShape: 'pill', // 'pill', 'rounded', 'square'
+    buttonStyle: 'solid', // 'solid', 'outline'
+    formTitle: 'Get in Touch',
+    formSubtitle: 'Send a direct message and I will get back to you shortly.'
+  },
+  contact_form: {
+    saveContactLabel: 'Save Contact',
+    connectLabel: 'Connect',
+    contactName: 'Kiran Fatima AccessIT',
+    contactEmail: 'fazaian2004@gmail.com',
+    contactPhone: '+92 839-2893829',
+    contactTitle: 'Intern',
+    buttonColor: '#4648d4',
+    buttonTextColor: '#ffffff',
+    buttonShape: 'pill',
+    buttonStyle: 'solid',
+    formTitle: 'Get in Touch',
+    formSubtitle: 'Send a direct message and I will get back to you shortly.'
   }
 };
 
