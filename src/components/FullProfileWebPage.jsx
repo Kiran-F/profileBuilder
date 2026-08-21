@@ -30,60 +30,62 @@ export default function FullProfileWebPage({
   const [textColor, setTextColor] = useState(initialTextColor || '#191c1e');
 
   useEffect(() => {
-    // 1. Check direct props if provided with elements
-    if (initialElements && Array.isArray(initialElements) && initialElements.length > 0) {
-      setElements(initialElements);
-      if (initialCardBgColor) setCardBgColor(initialCardBgColor);
-      if (initialCardBgType) setCardBgType(initialCardBgType);
-      if (initialCardBgGradient) setCardBgGradient(initialCardBgGradient);
-      if (initialCustomGradientStart) setCustomGradientStart(initialCustomGradientStart);
-      if (initialCustomGradientEnd) setCustomGradientEnd(initialCustomGradientEnd);
-      if (initialTextColor) setTextColor(initialTextColor);
-      return;
-    }
+    let loadedType = initialCardBgType;
+    let loadedGradient = initialCardBgGradient;
+    let loadedStart = initialCustomGradientStart;
+    let loadedEnd = initialCustomGradientEnd;
+    let loadedColor = initialCardBgColor;
+    let loadedText = initialTextColor;
 
-    // 2. Otherwise load payload from storage or window.name
-    let saved = null;
+    // Check payload from localStorage/sessionStorage/window.name
+    let savedPayload = null;
     try {
-      saved = localStorage.getItem('profile_studio_preview_data') || sessionStorage.getItem('profile_studio_preview_data');
-      if (!saved) {
-        saved = localStorage.getItem('profile_studio_drag_elements_v4') || sessionStorage.getItem('profile_studio_drag_elements_v4');
+      if (typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
+        savedPayload = window.name;
+      } else {
+        savedPayload = localStorage.getItem('profile_studio_preview_data') || sessionStorage.getItem('profile_studio_preview_data');
       }
-      if (!saved && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
-        saved = window.name;
-      }
-    } catch (e) {
-      console.warn('Storage read error:', e);
-    }
+    } catch (e) { }
 
-    if (saved) {
+    if (savedPayload) {
       try {
-        const parsed = JSON.parse(saved);
+        const parsed = JSON.parse(savedPayload);
         if (parsed.elements && Array.isArray(parsed.elements)) {
           setElements(parsed.elements);
-        } else if (Array.isArray(parsed)) {
-          setElements(parsed);
         }
-        if (parsed.cardBgColor) setCardBgColor(parsed.cardBgColor);
-        if (parsed.cardBgType) setCardBgType(parsed.cardBgType);
-        if (parsed.cardBgGradient) setCardBgGradient(parsed.cardBgGradient);
-        if (parsed.customGradientStart) setCustomGradientStart(parsed.customGradientStart);
-        if (parsed.customGradientEnd) setCustomGradientEnd(parsed.customGradientEnd);
-        if (parsed.textColor) setTextColor(parsed.textColor);
+        if (parsed.cardBgType) loadedType = parsed.cardBgType;
+        if (parsed.cardBgGradient) loadedGradient = parsed.cardBgGradient;
+        if (parsed.customGradientStart) loadedStart = parsed.customGradientStart;
+        if (parsed.customGradientEnd) loadedEnd = parsed.customGradientEnd;
+        if (parsed.cardBgColor) loadedColor = parsed.cardBgColor;
+        if (parsed.textColor) loadedText = parsed.textColor;
       } catch (e) { }
+    } else if (initialElements && Array.isArray(initialElements)) {
+      setElements(initialElements);
     }
 
     // Direct standalone storage key fallbacks
     try {
-      const storedType = localStorage.getItem('profile_studio_bg_type') || sessionStorage.getItem('profile_studio_bg_type');
-      if (storedType) setCardBgType(storedType);
-      const storedGradient = localStorage.getItem('profile_studio_bg_gradient') || sessionStorage.getItem('profile_studio_bg_gradient');
-      if (storedGradient) setCardBgGradient(storedGradient);
-      const storedStart = localStorage.getItem('profile_studio_grad_start') || sessionStorage.getItem('profile_studio_grad_start');
-      if (storedStart) setCustomGradientStart(storedStart);
-      const storedEnd = localStorage.getItem('profile_studio_grad_end') || sessionStorage.getItem('profile_studio_grad_end');
-      if (storedEnd) setCustomGradientEnd(storedEnd);
+      const sType = localStorage.getItem('profile_studio_bg_type') || sessionStorage.getItem('profile_studio_bg_type');
+      if (sType) loadedType = sType;
+      const sGradient = localStorage.getItem('profile_studio_bg_gradient') || sessionStorage.getItem('profile_studio_bg_gradient');
+      if (sGradient) loadedGradient = sGradient;
+      const sStart = localStorage.getItem('profile_studio_grad_start') || sessionStorage.getItem('profile_studio_grad_start');
+      if (sStart) loadedStart = sStart;
+      const sEnd = localStorage.getItem('profile_studio_grad_end') || sessionStorage.getItem('profile_studio_grad_end');
+      if (sEnd) loadedEnd = sEnd;
+      const sColor = localStorage.getItem('profile_studio_card_bg') || sessionStorage.getItem('profile_studio_card_bg');
+      if (sColor) loadedColor = sColor;
+      const sText = localStorage.getItem('profile_studio_text_color') || sessionStorage.getItem('profile_studio_text_color');
+      if (sText) loadedText = sText;
     } catch (e) { }
+
+    if (loadedType) setCardBgType(loadedType);
+    if (loadedGradient) setCardBgGradient(loadedGradient);
+    if (loadedStart) setCustomGradientStart(loadedStart);
+    if (loadedEnd) setCustomGradientEnd(loadedEnd);
+    if (loadedColor) setCardBgColor(loadedColor);
+    if (loadedText) setTextColor(loadedText);
   }, [initialElements, initialCardBgColor, initialCardBgType, initialCardBgGradient, initialCustomGradientStart, initialCustomGradientEnd, initialTextColor]);
 
   const renderElementBody = (elem) => {

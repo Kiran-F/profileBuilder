@@ -103,6 +103,45 @@ export const safeSetLocalStorage = (key, data) => {
   }
 };
 
+const readStoredValue = (key, jsonProp, fallback) => {
+  try {
+    // 1. Check window.name payload if opening preview tab
+    if (typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(window.name);
+        if (parsed && parsed[jsonProp] !== undefined && parsed[jsonProp] !== '') {
+          return parsed[jsonProp];
+        }
+      } catch (e) { }
+    }
+
+    // 2. Check profile_studio_preview_data JSON payload
+    const previewData = localStorage.getItem('profile_studio_preview_data') || sessionStorage.getItem('profile_studio_preview_data');
+    if (previewData) {
+      try {
+        const parsed = JSON.parse(previewData);
+        if (parsed && parsed[jsonProp] !== undefined && parsed[jsonProp] !== '') {
+          return parsed[jsonProp];
+        }
+      } catch (e) { }
+    }
+
+    // 3. Check standalone key in localStorage / sessionStorage
+    const standaloneVal = localStorage.getItem(key) || sessionStorage.getItem(key);
+    if (standaloneVal !== null && standaloneVal !== undefined && standaloneVal !== '') {
+      if (standaloneVal.startsWith('{') || standaloneVal.startsWith('"')) {
+        try {
+          const parsed = JSON.parse(standaloneVal);
+          if (parsed) return parsed;
+        } catch (e) { }
+      }
+      return standaloneVal;
+    }
+  } catch (e) { }
+
+  return fallback;
+};
+
 export default function App() {
   const isPreviewMode = new URLSearchParams(window.location.search).get('preview') === 'true';
 
@@ -122,62 +161,27 @@ export default function App() {
   });
 
   const [cardBgColor, setCardBgColor] = useState(() => {
-    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_card_bg') || sessionStorage.getItem('profile_studio_card_bg');
-    if (!saved && isPreviewMode && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
-      try {
-        const parsed = JSON.parse(window.name);
-        if (parsed.cardBgColor) return parsed.cardBgColor;
-      } catch (e) { }
-    }
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.cardBgColor) return parsed.cardBgColor;
-      } catch (e) { }
-    }
-    return saved || '#ffffff';
+    return readStoredValue('profile_studio_card_bg', 'cardBgColor', '#ffffff');
   });
 
   const [cardBgType, setCardBgType] = useState(() => {
-    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_bg_type');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.cardBgType) return parsed.cardBgType;
-      } catch (e) { }
-    }
-    return 'solid';
+    return readStoredValue('profile_studio_bg_type', 'cardBgType', 'solid');
   });
 
   const [cardBgGradient, setCardBgGradient] = useState(() => {
-    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_bg_gradient');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.cardBgGradient) return parsed.cardBgGradient;
-      } catch (e) { }
-    }
-    return 'sunset-fire';
+    return readStoredValue('profile_studio_bg_gradient', 'cardBgGradient', 'sunset-fire');
   });
 
-  const [customGradientStart, setCustomGradientStart] = useState('#ff416c');
-  const [customGradientEnd, setCustomGradientEnd] = useState('#ff4b2b');
+  const [customGradientStart, setCustomGradientStart] = useState(() => {
+    return readStoredValue('profile_studio_grad_start', 'customGradientStart', '#ff416c');
+  });
+
+  const [customGradientEnd, setCustomGradientEnd] = useState(() => {
+    return readStoredValue('profile_studio_grad_end', 'customGradientEnd', '#ff4b2b');
+  });
 
   const [textColor, setTextColor] = useState(() => {
-    let saved = localStorage.getItem('profile_studio_preview_data') || localStorage.getItem('profile_studio_text_color') || sessionStorage.getItem('profile_studio_text_color');
-    if (!saved && isPreviewMode && typeof window !== 'undefined' && window.name && window.name.startsWith('{')) {
-      try {
-        const parsed = JSON.parse(window.name);
-        if (parsed.textColor) return parsed.textColor;
-      } catch (e) { }
-    }
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.textColor) return parsed.textColor;
-      } catch (e) { }
-    }
-    return saved || '#191c1e';
+    return readStoredValue('profile_studio_text_color', 'textColor', '#191c1e');
   });
 
   const [editingElement, setEditingElement] = useState(null);
