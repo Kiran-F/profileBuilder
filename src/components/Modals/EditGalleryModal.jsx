@@ -157,8 +157,8 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div onClick={onClose} className="fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fadeIn">
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden flex flex-col max-h-[92vh] my-auto">
+    <div onClick={onClose} className="fixed inset-0 z-[200] lg:z-40 lg:left-auto lg:right-0 lg:top-14 lg:bottom-0 lg:w-[420px] xl:lg:w-[450px] lg:h-[calc(100vh-3.5rem)] flex items-center justify-center lg:block p-3 sm:p-6 lg:p-0 bg-slate-900/60 lg:bg-white backdrop-blur-xs lg:backdrop-blur-none lg:border-l lg:border-slate-200 lg:shadow-xl overflow-y-auto lg:overflow-hidden animate-fadeIn">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none border border-slate-100 lg:border-none w-full max-w-xl lg:max-w-none lg:w-full lg:h-full overflow-hidden flex flex-col max-h-[92vh] lg:max-h-none my-auto lg:my-0">
         {/* Header */}
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2">

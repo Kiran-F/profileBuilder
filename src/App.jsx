@@ -626,6 +626,7 @@ export default function App() {
           onAddElementAtIndex={handleAddElementAtIndex}
           onEditElement={(elem) => setEditingElement(elem)}
           onDeleteElement={handleDeleteElement}
+          isEditingOpen={!!editingElement}
         />
       </div>
 

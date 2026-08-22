@@ -23,7 +23,8 @@ export default function Canvas({
   onReorderElements,
   onAddElementAtIndex,
   onEditElement,
-  onDeleteElement
+  onDeleteElement,
+  isEditingOpen = false
 }) {
   const [dropTargetIndex, setDropTargetIndex] = useState(null);
   const [isCanvasDragOver, setIsCanvasDragOver] = useState(false);
@@ -173,7 +174,7 @@ export default function Canvas({
           handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : elements.length);
         }
       }}
-      className="flex-1 ml-0 sm:ml-44 md:ml-60 bg-[#f7f9fb] flex justify-center items-start overflow-y-auto min-h-screen select-none transition-all duration-200"
+      className={`flex-1 w-full ml-0 sm:ml-44 md:ml-60 ${isEditingOpen ? 'lg:mr-[420px] xl:mr-[450px]' : 'mr-0'} bg-[#f7f9fb] flex justify-center items-stretch overflow-y-auto min-h-[calc(100vh-3.5rem)] select-none transition-all duration-200`}
     >
       {/* Central Profile Card Container */}
       <div
