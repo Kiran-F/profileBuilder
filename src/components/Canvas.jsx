@@ -129,25 +129,25 @@ export default function Canvas({
   const renderElementBody = (elem, index) => {
     switch (elem.type) {
       case 'banner':
-        return <BannerElement data={elem.data} />;
+        return <BannerElement data={elem.data} isPreview={false} />;
       case 'identity':
-        return <IdentityElement data={elem.data} textColor={textColor} hasBannerAbove={index > 0 && elements[index - 1]?.type === 'banner'} />;
+        return <IdentityElement data={elem.data} textColor={textColor} hasBannerAbove={index > 0 && elements[index - 1]?.type === 'banner'} isPreview={false} />;
       case 'bio':
-        return <BioElement data={elem.data} textColor={textColor} />;
+        return <BioElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'social':
-        return <SocialElement data={elem.data} />;
+        return <SocialElement data={elem.data} isPreview={false} />;
       case 'badges':
-        return <BadgesElement data={elem.data} textColor={textColor} />;
+        return <BadgesElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'youtube':
-        return <YoutubeElement data={elem.data} textColor={textColor} />;
+        return <YoutubeElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'text':
-        return <TextElement data={elem.data} textColor={textColor} />;
+        return <TextElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'contact':
-        return <ContactElement data={elem.data} textColor={textColor} />;
+        return <ContactElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'links':
-        return <LinksElement data={elem.data} textColor={textColor} />;
+        return <LinksElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'gallery':
-        return <GalleryElement data={elem.data} textColor={textColor} />;
+        return <GalleryElement data={elem.data} textColor={textColor} isPreview={false} />;
       case 'contactForm':
       case 'contact_form':
         return <ContactFormElement data={elem.data} isPreview={false} />;

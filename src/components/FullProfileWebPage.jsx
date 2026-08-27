@@ -93,23 +93,23 @@ export default function FullProfileWebPage({
       case 'banner':
         return <BannerElement data={elem.data} isPreview={true} />;
       case 'identity':
-        return <IdentityElement data={elem.data} textColor={textColor} hasBannerAbove={hasTopBanner} />;
+        return <IdentityElement data={elem.data} textColor={textColor} hasBannerAbove={hasTopBanner} isPreview={true} />;
       case 'bio':
-        return <BioElement data={elem.data} textColor={textColor} />;
+        return <BioElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'social':
-        return <SocialElement data={elem.data} />;
+        return <SocialElement data={elem.data} isPreview={true} />;
       case 'badges':
-        return <BadgesElement data={elem.data} textColor={textColor} />;
+        return <BadgesElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'youtube':
-        return <YoutubeElement data={elem.data} textColor={textColor} />;
+        return <YoutubeElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'text':
-        return <TextElement data={elem.data} textColor={textColor} />;
+        return <TextElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'contact':
-        return <ContactElement data={elem.data} textColor={textColor} />;
+        return <ContactElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'links':
-        return <LinksElement data={elem.data} textColor={textColor} />;
+        return <LinksElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'gallery':
-        return <GalleryElement data={elem.data} textColor={textColor} />;
+        return <GalleryElement data={elem.data} textColor={textColor} isPreview={true} />;
       case 'contactForm':
       case 'contact_form':
         return <ContactFormElement data={elem.data} isPreview={true} />;

@@ -36,7 +36,7 @@ export function buildShadowStyle(size, color = '#0f172a') {
   }
 }
 
-export default function YoutubeElement({ data, textColor }) {
+export default function YoutubeElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -78,7 +78,7 @@ export default function YoutubeElement({ data, textColor }) {
               title={title || 'YouTube Video'}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              className="w-full h-full border-0"
+              className={`w-full h-full border-0 ${!isPreview ? 'pointer-events-none' : ''}`}
             ></iframe>
           ) : (
             <div className="flex flex-col items-center justify-center p-6 text-center text-slate-400">

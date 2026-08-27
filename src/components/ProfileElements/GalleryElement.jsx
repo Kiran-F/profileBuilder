@@ -36,7 +36,7 @@ const formatUrl = (url) => {
   return `https://${trimmed}`;
 };
 
-export default function GalleryElement({ data, textColor }) {
+export default function GalleryElement({ data, textColor, isPreview = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (!data) return null;
@@ -175,9 +175,15 @@ export default function GalleryElement({ data, textColor }) {
       >
         {targetUrl ? (
           <a
-            href={targetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={isPreview ? targetUrl : 'javascript:void(0)'}
+            target={isPreview ? '_blank' : '_self'}
+            rel={isPreview ? 'noopener noreferrer' : undefined}
+            onClick={(e) => {
+              if (!isPreview) {
+                e.preventDefault();
+              }
+            }}
+            title={!isPreview ? 'Target link active on Preview page' : undefined}
             className="block w-full h-full no-underline outline-none border-none text-inherit cursor-pointer"
           >
             {renderCardInnerContent(item)}

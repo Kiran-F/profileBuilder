@@ -40,7 +40,7 @@ const formatPhoneUrl = (phone) => {
   return `tel:${digits}`;
 };
 
-export default function ContactElement({ data, textColor }) {
+export default function ContactElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -115,7 +115,9 @@ export default function ContactElement({ data, textColor }) {
         {/* Email */}
         {hasEmail && (
           <a
-            href={`mailto:${email.trim()}`}
+            href={isPreview ? `mailto:${email.trim()}` : 'javascript:void(0)'}
+            onClick={(e) => { if (!isPreview) e.preventDefault(); }}
+            title={!isPreview ? 'Email link active on Preview page' : undefined}
             className="flex items-center gap-3 p-3 rounded-xl border border-slate-200/80 bg-transparent hover:border-indigo-400 transition-all group"
           >
             {/* Intact Material Symbol Icon */}
@@ -136,7 +138,9 @@ export default function ContactElement({ data, textColor }) {
         {/* Contact / WhatsApp Phone */}
         {hasPhone && (
           <a
-            href={formatPhoneUrl(phone)}
+            href={isPreview ? formatPhoneUrl(phone) : 'javascript:void(0)'}
+            onClick={(e) => { if (!isPreview) e.preventDefault(); }}
+            title={!isPreview ? 'Phone link active on Preview page' : undefined}
             className="flex items-center gap-3 p-3 rounded-xl border border-slate-200/80 bg-transparent hover:border-emerald-400 transition-all group"
           >
             {/* Intact Material Symbol Icon */}
@@ -157,9 +161,11 @@ export default function ContactElement({ data, textColor }) {
         {/* Portfolio Website */}
         {hasWebsite && (
           <a
-            href={formatUrl(website)}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={isPreview ? formatUrl(website) : 'javascript:void(0)'}
+            target={isPreview ? '_blank' : '_self'}
+            rel={isPreview ? 'noopener noreferrer' : undefined}
+            onClick={(e) => { if (!isPreview) e.preventDefault(); }}
+            title={!isPreview ? 'Website link active on Preview page' : undefined}
             className="flex items-center gap-3 p-3 rounded-xl border border-slate-200/80 bg-transparent hover:border-blue-400 transition-all group"
           >
             {/* Intact Material Symbol Icon */}

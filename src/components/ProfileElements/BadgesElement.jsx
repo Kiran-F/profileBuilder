@@ -28,7 +28,7 @@ const FONT_MAP = {
   'Indie Flower': "'Indie Flower', cursive"
 };
 
-export default function BadgesElement({ data, textColor }) {
+export default function BadgesElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -133,9 +133,15 @@ export default function BadgesElement({ data, textColor }) {
             return (
               <a
                 key={badge.id}
-                href={badge.linkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={isPreview ? badge.linkUrl : 'javascript:void(0)'}
+                target={isPreview ? '_blank' : '_self'}
+                rel={isPreview ? 'noopener noreferrer' : undefined}
+                onClick={(e) => {
+                  if (!isPreview) {
+                    e.preventDefault();
+                  }
+                }}
+                title={!isPreview ? 'Verification link active on Preview page' : undefined}
                 className="no-underline"
               >
                 {BadgeCard}

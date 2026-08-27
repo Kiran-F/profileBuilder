@@ -100,7 +100,7 @@ export default function ContactFormElement({ data, isPreview = false }) {
             onClick={handleSaveContactClick}
             style={getPrimaryButtonStyle()}
             className={`w-full py-2.5 sm:py-3 px-3 sm:px-5 font-bold text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 ${getShapeClass()}`}
-            title="Download vCard contact to phone"
+            title={isPreview ? "Download vCard contact to phone" : "Save Contact active on Preview page"}
           >
             <span className="material-symbols-outlined text-lg sm:text-xl">badge</span>
             <span className="truncate">{saveContactLabel}</span>
@@ -112,7 +112,7 @@ export default function ContactFormElement({ data, isPreview = false }) {
             onClick={handleConnectClick}
             style={getSecondaryButtonStyle()}
             className={`w-full py-2.5 sm:py-3 px-3 sm:px-5 font-bold text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 ${getShapeClass()}`}
-            title="Open contact message form"
+            title={isPreview ? "Open contact message form" : "Connect form active on Preview page"}
           >
             <span className="material-symbols-outlined text-lg sm:text-xl">connect_without_contact</span>
             <span className="truncate">{connectLabel}</span>

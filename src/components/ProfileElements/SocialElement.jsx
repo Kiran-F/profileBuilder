@@ -72,7 +72,7 @@ const normalizeUrl = (url) => {
   return `https://${url}`;
 };
 
-export default function SocialElement({ data }) {
+export default function SocialElement({ data, isPreview = false }) {
   const links = data?.links || [];
   const activeLinks = links.filter((l) => l.active && l.url);
 
@@ -151,10 +151,15 @@ export default function SocialElement({ data }) {
         {activeLinks.map((item) => (
           <a
             key={item.platform}
-            href={normalizeUrl(item.url)}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={`${item.name}`}
+            href={isPreview ? normalizeUrl(item.url) : 'javascript:void(0)'}
+            target={isPreview ? '_blank' : '_self'}
+            rel={isPreview ? 'noopener noreferrer' : undefined}
+            onClick={(e) => {
+              if (!isPreview) {
+                e.preventDefault();
+              }
+            }}
+            title={`${item.name}${!isPreview ? ' (Links active on Preview page)' : ''}`}
             style={getCardStyle(item)}
             className={`flex items-center justify-center border shadow-xs hover:scale-110 transition-all duration-200 cursor-pointer ${getShapeClass()} ${getSizeClass()}`}
           >

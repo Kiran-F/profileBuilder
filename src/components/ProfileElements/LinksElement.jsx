@@ -99,7 +99,7 @@ const formatUrl = (url) => {
   return `https://${url}`;
 };
 
-export default function LinksElement({ data, textColor }) {
+export default function LinksElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -180,9 +180,15 @@ export default function LinksElement({ data, textColor }) {
         {validItems.map((item) => (
           <a
             key={item.id}
-            href={formatUrl(item.url)}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={isPreview ? formatUrl(item.url) : 'javascript:void(0)'}
+            target={isPreview ? '_blank' : '_self'}
+            rel={isPreview ? 'noopener noreferrer' : undefined}
+            onClick={(e) => {
+              if (!isPreview) {
+                e.preventDefault();
+              }
+            }}
+            title={`${item.title || 'Link'}${!isPreview ? ' (Links active on Preview page)' : ''}`}
             style={getButtonStyle()}
             className={`w-full py-3.5 sm:py-4 px-4 sm:px-6 flex items-center justify-between transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer ${buttonShape}`}
           >
