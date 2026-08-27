@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BaseModal from './BaseModal';
 
 const FONT_FAMILIES = [
   { id: 'Inter', name: 'Inter', family: "'Inter', sans-serif" },
@@ -110,28 +111,14 @@ export default function EditBioModal({ element, onSave, onClose }) {
   };
 
   return (
-    <div onClick={onClose} className="fixed inset-0 z-[200] lg:z-40 lg:left-auto lg:right-0 lg:top-14 lg:bottom-0 lg:w-[420px] xl:lg:w-[450px] lg:h-[calc(100vh-3.5rem)] flex items-center justify-center lg:block p-3 sm:p-6 lg:p-0 bg-slate-900/60 lg:bg-white backdrop-blur-xs lg:backdrop-blur-none lg:border-l lg:border-slate-200 lg:shadow-xl overflow-y-auto lg:overflow-hidden animate-fadeIn">
-      <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none border border-slate-100 lg:border-none w-full max-w-lg lg:max-w-none lg:w-full lg:h-full overflow-hidden flex flex-col max-h-[92vh] lg:max-h-none my-auto lg:my-0">
-        {/* Header */}
-        <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-indigo-600 text-2xl p-2 bg-indigo-50 rounded-xl">description</span>
-            <div>
-              <h2 className="text-base font-bold text-slate-900 leading-tight">Edit Bio & Formatting</h2>
-              <p className="text-xs text-slate-500">Customize bio text, fonts, colors & styling</p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
-          >
-            <span className="material-symbols-outlined text-xl">close</span>
-          </button>
-        </div>
-
-        {/* Body */}
-        <form onSubmit={handleSubmit} className="p-5 overflow-y-auto flex-1 space-y-4">
+    <BaseModal
+      title="Edit Bio & Formatting"
+      subtitle="Customize bio text, fonts, colors & styling"
+      icon="description"
+      onClose={onClose}
+      onSave={handleSubmit}
+      saveButtonText="Save Bio"
+    >
           {/* Text Area */}
           <div>
             <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
@@ -330,25 +317,6 @@ export default function EditBioModal({ element, onSave, onClose }) {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="pt-3 border-t border-slate-100 flex justify-end gap-2.5">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 cursor-pointer rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-100 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 rounded-xl bg-indigo-600 cursor-pointer text-white text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-md flex items-center gap-1"
-            >
-              <span className="material-symbols-outlined text-base">check</span>
-              Save Bio
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    </BaseModal>
   );
 }

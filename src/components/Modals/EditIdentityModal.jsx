@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AvatarCropModal from './AvatarCropModal';
+import BaseModal from './BaseModal';
 
 const FONT_FAMILIES = [
   { id: 'Inter', name: 'Inter', family: "'Inter', sans-serif" },
@@ -202,28 +203,14 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
 
   return (
     <>
-      <div onClick={onClose} className="fixed inset-0 z-[200] lg:z-40 lg:left-auto lg:right-0 lg:top-14 lg:bottom-0 lg:w-[420px] xl:lg:w-[450px] lg:h-[calc(100vh-3.5rem)] flex items-center justify-center lg:block p-3 sm:p-6 lg:p-0 bg-slate-900/60 lg:bg-white backdrop-blur-xs lg:backdrop-blur-none lg:border-l lg:border-slate-200 lg:shadow-xl overflow-y-auto lg:overflow-hidden animate-fadeIn">
-        <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-2xl sm:rounded-3xl lg:rounded-none shadow-2xl lg:shadow-none border border-slate-100 lg:border-none w-full max-w-lg lg:max-w-none lg:w-full lg:h-full overflow-hidden flex flex-col max-h-[92vh] lg:max-h-none my-auto lg:my-0">
-          {/* Modal Header */}
-          <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-indigo-600 text-2xl p-2 bg-indigo-50 rounded-xl">person</span>
-              <div>
-                <h2 className="text-base font-bold text-slate-900 leading-tight">Edit Identity & Alignment</h2>
-                <p className="text-xs text-slate-500">Update photo, name, work info, alignment & font styles</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-lg hover:bg-slate-100 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-xl">close</span>
-            </button>
-          </div>
-
-          {/* Modal Body */}
-          <form onSubmit={handleFormSubmit} className="p-5 overflow-y-auto flex-1 space-y-4">
+      <BaseModal
+        title="Edit Identity & Alignment"
+        subtitle="Update photo, name, work info, alignment & font styles"
+        icon="person"
+        onClose={onClose}
+        onSave={handleFormSubmit}
+        saveButtonText="Save Identity"
+      >
             {/* NEW: Identity Alignment Selector (Left, Center, Right) */}
             <div className="border border-slate-200/90 rounded-2xl p-3.5 space-y-2 bg-indigo-50/30">
               <span className="text-xs font-bold text-slate-800 block uppercase tracking-wide">
@@ -558,26 +545,7 @@ export default function EditIdentityModal({ element, onSave, onClose }) {
               </div>
             </div>
 
-            {/* Footer Buttons */}
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-md transition-all cursor-pointer flex items-center gap-1"
-              >
-                <span className="material-symbols-outlined text-base">check</span>
-                Save Identity
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      </BaseModal>
 
       {/* Avatar Crop & Shape Adjustment Modal */}
       {isCropModalOpen && cropImageSource && (
