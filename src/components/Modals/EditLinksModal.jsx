@@ -1,34 +1,7 @@
 import React, { useState } from 'react';
 import BaseModal from './BaseModal';
+import { FONT_FAMILIES } from '../../constants/fonts';
 import { LINK_ICONS } from '../ProfileElements/LinksElement';
-
-const FONT_FAMILIES = [
-  { id: 'Inter', name: 'Inter', family: "'Inter', sans-serif" },
-  { id: 'Bebas Neue', name: 'Bebas Neue', family: "'Bebas Neue', cursive" },
-  { id: 'Roboto', name: 'Roboto', family: "'Roboto', sans-serif" },
-  { id: 'sans-serif', name: 'sans-serif (System Default)', family: 'sans-serif' },
-  { id: 'Open Sans', name: 'Open Sans', family: "'Open Sans', sans-serif" },
-  { id: 'Lato', name: 'Lato', family: "'Lato', sans-serif" },
-  { id: 'Sekuya', name: 'Sekuya', family: "'Sekuya', 'Cinzel', serif" },
-  { id: 'Roboto Mono', name: 'Roboto Mono', family: "'Roboto Mono', monospace" },
-  { id: 'Arimo', name: 'Arimo', family: "'Arimo', sans-serif" },
-  { id: 'Montserrat', name: 'Montserrat', family: "'Montserrat', sans-serif" },
-  { id: 'Bitcount Prop Single', name: 'Bitcount Prop Single', family: "'Bitcount Prop Single', 'Pixelify Sans', 'Silkscreen', cursive" },
-  { id: 'Rubik Spray Paint', name: 'Rubik Spray Paint', family: "'Rubik Spray Paint', cursive" },
-  { id: 'Merriweather', name: 'Merriweather', family: "'Merriweather', serif" },
-  { id: 'Oswald', name: 'Oswald', family: "'Oswald', sans-serif" },
-  { id: 'Edu VIC WA NT Hand Precursive', name: 'Edu VIC WA NT Hand Precursive', family: "'Edu VIC WA NT Hand Precursive', cursive" },
-  { id: 'Inconsolata', name: 'Inconsolata', family: "'Inconsolata', monospace" },
-  { id: 'JetBrains Mono', name: 'JetBrains Mono', family: "'JetBrains Mono', monospace" },
-  { id: 'Dancing Script', name: 'Dancing Script', family: "'Dancing Script', cursive" },
-  { id: 'Caveat', name: 'Caveat', family: "'Caveat', cursive" },
-  { id: 'Archivo Black', name: 'Archivo Black', family: "'Archivo Black', sans-serif" },
-  { id: 'Black Ops One', name: 'Black Ops One', family: "'Black Ops One', display" },
-  { id: 'Saira', name: 'Saira', family: "'Saira', sans-serif" },
-  { id: 'Changa One', name: 'Changa One', family: "'Changa One', display" },
-  { id: 'Orbitron', name: 'Orbitron', family: "'Orbitron', sans-serif" },
-  { id: 'Indie Flower', name: 'Indie Flower', family: "'Indie Flower', cursive" }
-];
 
 const PRESET_COLORS = [
   { hex: '#ffffff', name: 'Pure White' },

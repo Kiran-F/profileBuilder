@@ -1,32 +1,5 @@
 import React from 'react';
-
-const FONT_MAP = {
-  'Inter': "'Inter', sans-serif",
-  'Bebas Neue': "'Bebas Neue', cursive",
-  'Roboto': "'Roboto', sans-serif",
-  'sans-serif': 'sans-serif',
-  'Open Sans': "'Open Sans', sans-serif",
-  'Lato': "'Lato', sans-serif",
-  'Sekuya': "'Sekuya', 'Cinzel', serif",
-  'Roboto Mono': "'Roboto Mono', monospace",
-  'Arimo': "'Arimo', sans-serif",
-  'Montserrat': "'Montserrat', sans-serif",
-  'Bitcount Prop Single': "'Bitcount Prop Single', 'Pixelify Sans', 'Silkscreen', cursive",
-  'Rubik Spray Paint': "'Rubik Spray Paint', cursive",
-  'Merriweather': "'Merriweather', serif",
-  'Oswald': "'Oswald', sans-serif",
-  'Edu VIC WA NT Hand Precursive': "'Edu VIC WA NT Hand Precursive', cursive",
-  'Inconsolata': "'Inconsolata', monospace",
-  'JetBrains Mono': "'JetBrains Mono', monospace",
-  'Dancing Script': "'Dancing Script', cursive",
-  'Caveat': "'Caveat', cursive",
-  'Archivo Black': "'Archivo Black', sans-serif",
-  'Black Ops One': "'Black Ops One', display",
-  'Saira': "'Saira', sans-serif",
-  'Changa One': "'Changa One', display",
-  'Orbitron': "'Orbitron', sans-serif",
-  'Indie Flower': "'Indie Flower', cursive"
-};
+import { FONT_MAP } from '../../constants/fonts';
 
 const formatUrl = (url) => {
   if (!url) return '';
