@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import Sidebar from './components/Sidebar';
 import Canvas from './components/Canvas';
-import EditIdentityModal from './components/Modals/EditIdentityModal';
-import EditBioModal from './components/Modals/EditBioModal';
-import EditSocialModal from './components/Modals/EditSocialModal';
-import EditBadgesModal from './components/Modals/EditBadgesModal';
-import EditYoutubeModal from './components/Modals/EditYoutubeModal';
-import EditTextModal from './components/Modals/EditTextModal';
-import EditContactModal from './components/Modals/EditContactModal';
-import EditLinksModal from './components/Modals/EditLinksModal';
-import EditGalleryModal from './components/Modals/EditGalleryModal';
-import EditBannerModal from './components/Modals/EditBannerModal';
-import EditContactFormModal from './components/Modals/EditContactFormModal';
-import FullProfileWebPage from './components/FullProfileWebPage';
+
+// Lazy-loaded Edit Modals (Loaded only when user clicks "Edit")
+const EditIdentityModal = lazy(() => import('./components/Modals/EditIdentityModal'));
+const EditBioModal = lazy(() => import('./components/Modals/EditBioModal'));
+const EditSocialModal = lazy(() => import('./components/Modals/EditSocialModal'));
+const EditBadgesModal = lazy(() => import('./components/Modals/EditBadgesModal'));
+const EditYoutubeModal = lazy(() => import('./components/Modals/EditYoutubeModal'));
+const EditTextModal = lazy(() => import('./components/Modals/EditTextModal'));
+const EditContactModal = lazy(() => import('./components/Modals/EditContactModal'));
+const EditLinksModal = lazy(() => import('./components/Modals/EditLinksModal'));
+const EditGalleryModal = lazy(() => import('./components/Modals/EditGalleryModal'));
+const EditBannerModal = lazy(() => import('./components/Modals/EditBannerModal'));
+const EditContactFormModal = lazy(() => import('./components/Modals/EditContactFormModal'));
+const FullProfileWebPage = lazy(() => import('./components/FullProfileWebPage'));
+
 import { EMPTY_ELEMENT_DATA, enforceFixedOrder } from './data/defaultProfile';
 import { PROFILE_BACKGROUND_GRADIENTS, computeProfileBackgroundStyle } from './utils/backgroundStyles';
 
@@ -525,6 +528,29 @@ export default function App() {
     setActiveDraggedType(null);
   };
 
+  if (isPreviewMode) {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#f7f9fb]">
+          <div className="flex items-center gap-2 text-indigo-600 font-semibold text-sm">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping"></span>
+            Loading Preview Profile...
+          </div>
+        </div>
+      }>
+        <FullProfileWebPage
+          initialElements={elements}
+          initialCardBgColor={cardBgColor}
+          initialCardBgType={cardBgType}
+          initialCardBgGradient={cardBgGradient}
+          initialCustomGradientStart={customGradientStart}
+          initialCustomGradientEnd={customGradientEnd}
+          initialTextColor={textColor}
+        />
+      </Suspense>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f9fb] font-sans antialiased text-slate-900 selection:bg-[#4648d4] selection:text-white pb-16 sm:pb-0">
       {/* Top Header Bar */}
@@ -876,7 +902,6 @@ export default function App() {
                     <div className="text-center py-6 px-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                       <span className="material-symbols-outlined text-3xl text-slate-300 block mb-1">bookmark_border</span>
                       <p className="text-xs font-medium text-slate-500">No custom themes saved yet.</p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">Customize your profile canvas and save your design above!</p>
                     </div>
                   ) : (
                     <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -884,8 +909,8 @@ export default function App() {
                         // Compute swatch background style
                         const swatchBg = theme.cardBgType === 'gradient'
                           ? (theme.cardBgGradient === 'custom'
-                              ? `linear-gradient(135deg, ${theme.customGradientStart || '#ff416c'}, ${theme.customGradientEnd || '#ff4b2b'})`
-                              : computeProfileBackgroundStyle({ bgType: 'gradient', bgGradient: theme.cardBgGradient }).background)
+                            ? `linear-gradient(135deg, ${theme.customGradientStart || '#ff416c'}, ${theme.customGradientEnd || '#ff4b2b'})`
+                            : computeProfileBackgroundStyle({ bgType: 'gradient', bgGradient: theme.cardBgGradient }).background)
                           : (theme.cardBgColor || '#ffffff');
 
                         return (
@@ -1004,11 +1029,10 @@ export default function App() {
               onDragStart={(e) => handleMobileDragStart(e, item.key)}
               onDragEnd={handleMobileDragEnd}
               onMouseUp={handleMobileDragEnd}
-              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-grab active:cursor-grabbing flex-shrink-0 relative ${
-                isDragging
+              className={`flex flex-col items-center gap-0.5 py-1 px-2.5 rounded-xl transition-all cursor-grab active:cursor-grabbing flex-shrink-0 relative ${isDragging
                   ? 'bg-indigo-600 text-white font-bold ring-2 ring-indigo-400 shadow-md'
                   : 'text-slate-700 hover:text-indigo-600'
-              }`}
+                }`}
               title={`Drag onto canvas to add ${item.label}`}
             >
               <span className={`material-symbols-outlined text-xl transition-colors ${isDragging ? 'text-white' : 'text-indigo-600'}`}>
@@ -1028,11 +1052,10 @@ export default function App() {
           type="button"
           disabled={elements.length === 0}
           onClick={handleClearCanvas}
-          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all flex-shrink-0 ${
-            elements.length > 0
+          className={`flex flex-col items-center gap-0.5 py-1 px-2 rounded-xl transition-all flex-shrink-0 ${elements.length > 0
               ? 'text-red-500 hover:text-red-700 cursor-pointer active:scale-95'
               : 'text-slate-400 opacity-75 pointer-events-none'
-          }`}
+            }`}
           title="Clear all canvas elements"
         >
           <span className="material-symbols-outlined text-xl">delete_sweep</span>
@@ -1041,93 +1064,96 @@ export default function App() {
       </nav>
 
       {/* Modals */}
-      {editingElement && editingElement.type === 'identity' && (
-        <EditIdentityModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+      {/* Editing Modals - Lazy-loaded on demand */}
+      <Suspense fallback={null}>
+        {editingElement && editingElement.type === 'identity' && (
+          <EditIdentityModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'bio' && (
-        <EditBioModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'bio' && (
+          <EditBioModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'social' && (
-        <EditSocialModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'social' && (
+          <EditSocialModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'badges' && (
-        <EditBadgesModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'badges' && (
+          <EditBadgesModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'youtube' && (
-        <EditYoutubeModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'youtube' && (
+          <EditYoutubeModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'text' && (
-        <EditTextModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'text' && (
+          <EditTextModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'contact' && (
-        <EditContactModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'contact' && (
+          <EditContactModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'links' && (
-        <EditLinksModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'links' && (
+          <EditLinksModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'gallery' && (
-        <EditGalleryModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'gallery' && (
+          <EditGalleryModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && editingElement.type === 'banner' && (
-        <EditBannerModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && editingElement.type === 'banner' && (
+          <EditBannerModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
 
-      {editingElement && (editingElement.type === 'contactForm' || editingElement.type === 'contact_form') && (
-        <EditContactFormModal
-          element={editingElement}
-          onSave={handleSaveElementData}
-          onClose={() => setEditingElement(null)}
-        />
-      )}
+        {editingElement && (editingElement.type === 'contactForm' || editingElement.type === 'contact_form') && (
+          <EditContactFormModal
+            element={editingElement}
+            onSave={handleSaveElementData}
+            onClose={() => setEditingElement(null)}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
