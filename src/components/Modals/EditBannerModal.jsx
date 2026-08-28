@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BaseModal from './BaseModal';
 import { FONT_FAMILIES } from '../../constants/fonts';
 import { GRADIENT_PRESETS } from '../ProfileElements/BannerElement';
+import { compressImage } from '../../utils/imageCompressor';
 
 const PRESET_COLORS = [
   { hex: '#ffffff', name: 'Pure White' },
@@ -38,21 +39,17 @@ export default function EditBannerModal({ element, onSave, onClose }) {
   const [isBold, setIsBold] = useState(element.data.isBold !== undefined ? element.data.isBold : true);
   const [isItalic, setIsItalic] = useState(element.data.isItalic || false);
 
-  const handleFileUpload = (e) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Banner image file size is too large! Please select an image under 5MB.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setImageUrl(event.target?.result || '');
+    try {
+      const compressed = await compressImage(file, 1600, 0.88);
+      setImageUrl(compressed);
       setBannerType('image');
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Banner image compression error:', err);
+    }
   };
 
   const handleSubmit = (e) => {

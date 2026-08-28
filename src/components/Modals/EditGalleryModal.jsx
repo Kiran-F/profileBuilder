@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BaseModal from './BaseModal';
 import { FONT_FAMILIES } from '../../constants/fonts';
+import { compressImage } from '../../utils/imageCompressor';
 
 const PRESET_COLORS = [
   { hex: '#0f172a', name: 'Slate Dark' },
@@ -58,20 +59,16 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
     );
   };
 
-  const handleFileUpload = (id, e) => {
+  const handleFileUpload = async (id, e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File size is too large! Please choose an image under 5MB.');
-      return;
+    try {
+      const compressed = await compressImage(file, 1400, 0.88);
+      handleUpdateItem(id, 'image', compressed);
+    } catch (err) {
+      console.error('Gallery image compression error:', err);
     }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      handleUpdateItem(id, 'image', event.target?.result);
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e) => {

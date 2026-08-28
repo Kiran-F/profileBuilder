@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { compressImage } from '../../utils/imageCompressor';
 
 const SHAPES = [
   { id: 'circle', label: 'Circle', icon: 'radio_button_unchecked', shapeClass: 'rounded-full w-48 h-48' },
@@ -206,9 +207,10 @@ export default function AvatarCropModal({
   };
 
   const handleSave = async () => {
-    const croppedUrl = await generateCroppedImage();
+    const rawCroppedUrl = await generateCroppedImage();
+    const compressedAvatarUrl = await compressImage(rawCroppedUrl, 800, 0.88);
     onSave({
-      croppedAvatarUrl: croppedUrl,
+      croppedAvatarUrl: compressedAvatarUrl,
       rawAvatarUrl: imageUrl,
       avatarShape: shape,
       avatarZoom: zoom,
