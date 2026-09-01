@@ -28,6 +28,25 @@ export default function Canvas({
 }) {
   const [dropTargetIndex, setDropTargetIndex] = useState(null);
   const [isCanvasDragOver, setIsCanvasDragOver] = useState(false);
+  const [justDroppedId, setJustDroppedId] = useState(null);
+  const prevElementsRef = React.useRef(elements);
+
+  useEffect(() => {
+    // Detect newly added element to trigger entrance drop animation
+    if (elements.length > prevElementsRef.current.length) {
+      const prevIds = new Set(prevElementsRef.current.map((e) => e.id));
+      const newlyAdded = elements.find((e) => !prevIds.has(e.id));
+      if (newlyAdded && newlyAdded.id) {
+        setJustDroppedId(newlyAdded.id);
+        const timer = setTimeout(() => {
+          setJustDroppedId(null);
+        }, 500);
+        prevElementsRef.current = elements;
+        return () => clearTimeout(timer);
+      }
+    }
+    prevElementsRef.current = elements;
+  }, [elements]);
 
   useEffect(() => {
     const handleGlobalRelease = () => {
@@ -222,6 +241,7 @@ export default function Canvas({
         {/* POPULATED CANVAS ELEMENTS */}
         {elements.map((elem, index) => {
           const showTopLine = dropTargetIndex === index;
+          const isJustDropped = elem.id === justDroppedId;
 
           return (
             <React.Fragment key={elem.id}>
@@ -241,7 +261,9 @@ export default function Canvas({
               <div
                 onDragOver={(e) => handleItemDragOver(e, index)}
                 onDrop={(e) => handleDropAtPosition(e, dropTargetIndex !== null ? dropTargetIndex : index)}
-                className="relative w-full group element-wrapper p-3 sm:p-4 pt-6 sm:pt-7 rounded-xl transition-all border border-slate-200/80 hover:border-indigo-400 bg-white/10 my-1.5 cursor-default"
+                className={`relative w-full group element-wrapper p-3 sm:p-4 pt-6 sm:pt-7 rounded-xl transition-all border border-slate-200/80 bg-white/10 my-1.5 cursor-default ${
+                  isJustDropped ? 'animate-drop-pop ring-2 ring-indigo-500/60 shadow-lg' : 'hover:border-indigo-400'
+                }`}
               >
                 {/* 1. LEFT TYPE BADGE (GLASSMORPHIC) */}
                 <div
