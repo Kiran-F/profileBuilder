@@ -36,7 +36,7 @@ export function buildShadowStyle(size, color = '#0f172a') {
   }
 }
 
-export default function YoutubeElement({ data, textColor, isPreview = false }) {
+function YoutubeElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -94,3 +94,5 @@ export default function YoutubeElement({ data, textColor, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(YoutubeElement);

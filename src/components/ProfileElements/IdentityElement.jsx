@@ -33,7 +33,7 @@ export function buildDropShadowFilter(size, color = '#0f172a') {
   }
 }
 
-export default function IdentityElement({ data, textColor, hasBannerAbove = false }) {
+function IdentityElement({ data, textColor, hasBannerAbove = false }) {
   const {
     avatarUrl,
     name,
@@ -306,3 +306,5 @@ export default function IdentityElement({ data, textColor, hasBannerAbove = fals
     </div>
   );
 }
+
+export default React.memo(IdentityElement);

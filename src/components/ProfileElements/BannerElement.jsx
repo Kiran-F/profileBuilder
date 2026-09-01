@@ -10,7 +10,7 @@ export const GRADIENT_PRESETS = {
   'gold-amber': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
 };
 
-export default function BannerElement({ data, isPreview = false }) {
+function BannerElement({ data, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -111,3 +111,5 @@ export default function BannerElement({ data, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(BannerElement);

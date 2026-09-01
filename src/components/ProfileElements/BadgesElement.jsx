@@ -1,7 +1,7 @@
 import React from 'react';
 import { FONT_MAP } from '../../constants/fonts';
 
-export default function BadgesElement({ data, textColor, isPreview = false }) {
+function BadgesElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -128,3 +128,5 @@ export default function BadgesElement({ data, textColor, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(BadgesElement);

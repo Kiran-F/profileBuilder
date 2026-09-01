@@ -1,7 +1,7 @@
 import React from 'react';
 import { FONT_MAP } from '../../constants/fonts';
 
-export default function BioElement({ data, textColor }) {
+function BioElement({ data, textColor }) {
   const {
     bioLines,
     bioText,
@@ -87,3 +87,5 @@ export default function BioElement({ data, textColor }) {
     </div>
   );
 }
+
+export default React.memo(BioElement);

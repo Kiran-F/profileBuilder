@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import VisitorContactModal from '../Modals/VisitorContactModal';
 import { generateAndDownloadVCard } from '../../utils/vcardGenerator';
 
-export default function ContactFormElement({ data, isPreview = false }) {
+function ContactFormElement({ data, isPreview = false }) {
   const {
     saveContactLabel = 'Save Contact',
     connectLabel = 'Connect',
@@ -131,3 +131,5 @@ export default function ContactFormElement({ data, isPreview = false }) {
     </>
   );
 }
+
+export default React.memo(ContactFormElement);

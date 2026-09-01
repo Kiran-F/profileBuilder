@@ -9,7 +9,7 @@ const formatUrl = (url) => {
   return `https://${trimmed}`;
 };
 
-export default function GalleryElement({ data, textColor, isPreview = false }) {
+function GalleryElement({ data, textColor, isPreview = false }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (!data) return null;
@@ -258,3 +258,5 @@ export default function GalleryElement({ data, textColor, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(GalleryElement);

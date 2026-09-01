@@ -13,7 +13,7 @@ const formatPhoneUrl = (phone) => {
   return `tel:${digits}`;
 };
 
-export default function ContactElement({ data, textColor, isPreview = false }) {
+function ContactElement({ data, textColor, isPreview = false }) {
   if (!data) return null;
 
   const {
@@ -179,3 +179,5 @@ export default function ContactElement({ data, textColor, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(ContactElement);

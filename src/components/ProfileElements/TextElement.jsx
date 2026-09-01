@@ -1,7 +1,7 @@
 import React from 'react';
 import { FONT_MAP } from '../../constants/fonts';
 
-export default function TextElement({ data, textColor }) {
+function TextElement({ data, textColor }) {
   if (!data) return null;
 
   const {
@@ -87,3 +87,5 @@ export default function TextElement({ data, textColor }) {
     </div>
   );
 }
+
+export default React.memo(TextElement);

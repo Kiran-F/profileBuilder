@@ -72,7 +72,7 @@ const normalizeUrl = (url) => {
   return `https://${url}`;
 };
 
-export default function SocialElement({ data, isPreview = false }) {
+function SocialElement({ data, isPreview = false }) {
   const links = data?.links || [];
   const activeLinks = links.filter((l) => l.active && l.url);
 
@@ -172,3 +172,5 @@ export default function SocialElement({ data, isPreview = false }) {
     </div>
   );
 }
+
+export default React.memo(SocialElement);
