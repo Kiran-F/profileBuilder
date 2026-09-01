@@ -104,14 +104,14 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
   const getPreviewAspectClass = () => {
     switch (imageAspect) {
       case 'square':
-        return 'aspect-square object-cover';
+        return 'aspect-square object-contain bg-slate-50/50';
       case 'portrait':
-        return 'aspect-[3/4] object-cover object-top';
+        return 'aspect-[3/4] object-contain bg-slate-50/50';
       case 'natural':
-        return 'h-32 object-contain';
+        return 'h-32 object-contain bg-slate-50/40';
       case 'landscape':
       default:
-        return 'aspect-[16/9] object-cover';
+        return 'aspect-[4/3] object-contain bg-slate-50/50';
     }
   };
 
@@ -224,22 +224,23 @@ export default function EditGalleryModal({ element, onSave, onClose }) {
                 <label className="block text-[11px] font-semibold text-slate-500 mb-1">
                   Aspect Ratio
                 </label>
-                <div className="grid grid-cols-3 gap-1">
+                <div className="grid grid-cols-4 gap-1">
                   {[
-                    { id: 'landscape', label: 'Landscape (4:3)' },
-                    { id: 'square', label: 'Square (1:1)' },
-                    { id: 'portrait', label: 'Portrait (3:4)' }
+                    { id: 'landscape', label: 'Landscape' },
+                    { id: 'natural', label: 'Full Fit' },
+                    { id: 'square', label: 'Square' },
+                    { id: 'portrait', label: 'Portrait' }
                   ].map((asp) => (
                     <button
                       key={asp.id}
                       type="button"
                       onClick={() => setImageAspect(asp.id)}
-                      className={`py-1.5 text-[10px] sm:text-xs font-bold rounded-lg border transition-all cursor-pointer ${imageAspect === asp.id
+                      className={`py-1.5 text-[9.5px] sm:text-[11px] font-bold rounded-lg border transition-all cursor-pointer ${imageAspect === asp.id
                           ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                     >
-                      {asp.label.split(' ')[0]}
+                      {asp.label}
                     </button>
                   ))}
                 </div>

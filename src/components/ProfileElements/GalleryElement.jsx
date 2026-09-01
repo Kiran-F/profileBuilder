@@ -74,18 +74,18 @@ function GalleryElement({ data, textColor, isPreview = false }) {
   };
 
   // Image Aspect Ratio Classes:
-  // Portrait (4:5 ratio): Height > Width (Height is 1.33x Width)
+  // Certificates & Landscape items use 4:3 object-contain so top & bottom text is NEVER cropped!
   const getAspectClass = () => {
     switch (imageAspect) {
       case 'square':
-        return 'aspect-square object-cover';
+        return 'aspect-square object-contain bg-slate-50/50';
       case 'portrait':
-        return 'aspect-[4/5] object-cover object-top';
+        return 'aspect-[3/4] object-contain bg-slate-50/50';
       case 'natural':
-        return 'h-auto max-h-[300px] object-contain';
+        return 'w-full h-auto max-h-[360px] object-contain bg-slate-50/40';
       case 'landscape':
       default:
-        return 'aspect-[16/9] object-cover';
+        return 'aspect-[4/3] object-contain bg-slate-50/50';
     }
   };
 
